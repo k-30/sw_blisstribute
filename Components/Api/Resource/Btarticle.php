@@ -105,7 +105,6 @@ class Btarticle extends BtArticleResource implements BatchInterface
             throw new ApiException\ParameterMissingException();
         }
 
-
         $builder = $this->getManager()->createQueryBuilder();
         $builder->select(array('detail', 'attribute'))
             ->from('Shopware\Models\Article\Detail', 'detail')
@@ -189,13 +188,17 @@ class Btarticle extends BtArticleResource implements BatchInterface
         if ($violations->count() > 0) {
             throw new ApiException\ValidationException($violations);
         }
+        
+        if ($params['active'] && $article->isInactive()) {
+            $article->setInactive(false);
+        }
 
         $this->getManager()->persist($detail);
         $this->getManager()->persist($attributes);
         $this->getManager()->persist($article);
 
         if ($detail->getKind() == 1 && $detail->getActive() == 0) {
-            $detail->setKind(2);
+            $mainDetailChanged = false;
 
             /** @var Detail $currentNewDetail */
             foreach ($article->getDetails() as $currentNewDetail) {
@@ -207,10 +210,24 @@ class Btarticle extends BtArticleResource implements BatchInterface
                     continue;
                 }
 
+                $detail->setKind(2);
                 $currentNewDetail->setKind(1);
                 $this->getManager()->persist($currentNewDetail);
                 $article->setMainDetail($currentNewDetail);
+                $mainDetailChanged = true;
                 break;
+            }
+            
+            if (!$mainDetailChanged) {
+                $article->setActive(false);
+                
+                Enlight()->Events()->notify(
+                    'ExitBBlisstribute_ApiResourceArticle_DeactivateArticle',
+                    [
+                        'article' => $article,
+                        'detail' => $detail
+                    ]
+                );
             }
         }
 
