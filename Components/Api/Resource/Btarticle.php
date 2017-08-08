@@ -98,7 +98,6 @@ class Btarticle extends BtArticleResource implements BatchInterface
      */
     public function update($detailId, array $params)
     {
-        try {
         $this->checkPrivilege('update');
         $this->logDebug('start article update for detail ' . $detailId . ' (' . 'vhs number ' . $params['attribute']['blisstributeVhsNumber'] . ')');
 
@@ -190,8 +189,18 @@ class Btarticle extends BtArticleResource implements BatchInterface
             throw new ApiException\ValidationException($violations);
         }
         
-        if ($params['active'] && !$article->isActive()) {
-            $article->setActive(true);
+        if ($params['active'] && !$article->getActive()) {
+            $currentMainDetail = $article->getMainDetail();
+            
+            if (!$currentMainDetail->getActive()) {
+                $currentMainDetail->setKind(2);
+                $this->getManager()->persist($currentMainDetail);
+                $detail->setKind(1);
+                $article->setMainDetail($detail);
+                $article->setActive(true);
+                
+                $this->logDebug('main detail was changed from ' . $currentMainDetail->getId() . ' to ' . $detail->getId() . ' because the article was inactive');
+            }
         }
 
         $this->getManager()->persist($detail);
@@ -217,6 +226,8 @@ class Btarticle extends BtArticleResource implements BatchInterface
                     $this->getManager()->persist($currentNewDetail);
                     $article->setMainDetail($currentNewDetail);
                     $mainDetailChanged = true;
+                    
+                    $this->logDebug('main detail was changed from ' . $detail->getId() . ' to ' . $currentNewDetail->getId());
                     break;
                 }
             }
@@ -233,6 +244,10 @@ class Btarticle extends BtArticleResource implements BatchInterface
                 );
                 
                 $this->logDebug('deactivate article with id ' . $article->getId());
+            } else {
+                if ($params['active'] && !$article->getActive()) {
+                    $article->setActive(true);
+                }
             }
         }
 
@@ -241,12 +256,8 @@ class Btarticle extends BtArticleResource implements BatchInterface
         $this->getManager()->persist($article);
         $this->flush();
         
-        $this->logDebug('end article update for vhs number ' . $params['attribute']['blisstributeVhsNumber']);
+        $this->logDebug('end article update for for detail ' . $detailId . ' (vhs number ' . $params['attribute']['blisstributeVhsNumber'] . ')');
 
         return $detail;
-        }
-        catch(Exception $e) {
-            $this->logDebug('article update error :: ' . $e->getMessage());
-        }
     }
 }
