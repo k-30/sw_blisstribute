@@ -569,6 +569,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         $specificationData = array(
             'erpArticleNumber' => $this->getArticleVhsNumber($articleDetail),
             'articleNumber' => $articleDetail->getNumber(),
+            'manufacturerArticleNumber' => $articleDetail->getSupplierNumber(),
             'ean13' => $articleDetail->getEan(),
             'ean10' => '',
             'isrc' => '',
