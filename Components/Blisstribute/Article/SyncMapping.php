@@ -287,16 +287,16 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             }
 
             $deepLevel = $currentCategory->getLevel();
+		
+	    if (!$seoCategoryId) {
+		$baseCategory = $currentCategory;
+		break;
+	    }
 			
-			if (!$seoCategoryId) {
-				$baseCategory = $currentCategory;
-				break;
-			}
-			
-			if ($currentCategory->getId() == $seoCategoryId) {
-				$baseCategory = $currentCategory;
-				break;
-			}
+	    if ($currentCategory->getId() == $seoCategoryId) {
+		$baseCategory = $currentCategory;
+		break;
+	    }
         }
 
         if ($baseCategory == null) {
