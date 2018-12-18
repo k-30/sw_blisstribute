@@ -280,7 +280,11 @@ class Shopware_Plugins_Backend_ExitBBlisstribute_Bootstrap extends Shopware_Comp
                 ]
             );
         }
-
+		
+		if (version_compare($version, '0.14.7', '<')) {
+            Shopware()->Db()->query('DELETE FROM `s_core_menu` WHERE controller = ?', ['BlisstributeShopMapping']);
+        }
+	
         return ['success' => true, 'invalidateCache' => ['backend', 'proxy', 'config', 'frontend']];
     }
 
@@ -736,7 +740,6 @@ class Shopware_Plugins_Backend_ExitBBlisstribute_Bootstrap extends Shopware_Comp
             $modelManager->getClassMetadata('Shopware\CustomModels\Blisstribute\BlisstributePayment'),
             $modelManager->getClassMetadata('Shopware\CustomModels\Blisstribute\BlisstributeShippingRequest'),
             $modelManager->getClassMetadata('Shopware\CustomModels\Blisstribute\BlisstributeShippingRequestItems'),
-            $modelManager->getClassMetadata('Shopware\CustomModels\Blisstribute\BlisstributeShop'),
             $modelManager->getClassMetadata('Shopware\CustomModels\Blisstribute\BlisstributeCoupon'),
         ];
 
@@ -1237,8 +1240,8 @@ class Shopware_Plugins_Backend_ExitBBlisstribute_Bootstrap extends Shopware_Comp
                 'blisstribute-google-maps-key' => 'google maps key',
                 'blisstribute-transfer-orders' => 'transfer orders without verification',
                 'blisstribute-transfer-shop-article-prices' => 'transfer article prices of each shop',
-                        'blisstribute-article-mapping-classification3' => 'Classification 3 mapping',
-                        'blisstribute-article-mapping-classification4' => 'Classification 4 mapping'
+                'blisstribute-article-mapping-classification3' => 'Classification 3 mapping',
+                'blisstribute-article-mapping-classification4' => 'Classification 4 mapping'
             ],
         ];
  

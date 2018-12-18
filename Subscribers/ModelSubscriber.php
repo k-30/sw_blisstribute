@@ -41,8 +41,6 @@ class ModelSubscriber implements SubscriberInterface
             'Shopware\Models\Article\Detail::preRemove' => 'preRemoveDetail',
             'Shopware\Models\Property\Group::postPersist' => 'postPersistProperty',
             'Shopware\Models\Property\Group::preRemove' => 'preRemoveProperty',
-            'Shopware\Models\Shop\Shop::postPersist' => 'postPersistShop',
-            'Shopware\Models\Shop\Shop::preRemove' => 'preRemoveShop',
             'Shopware\Models\Voucher\Voucher::postPersist' => 'postPersistVoucher',
             'Shopware\Models\Voucher\Voucher::preRemove' => 'preRemoveVoucher',
             'Shopware\Models\Payment\Payment::postPersist' => 'postPersistPayment',
@@ -335,47 +333,6 @@ class ModelSubscriber implements SubscriberInterface
         }
 
         $modelManager->remove($articleType);
-        $modelManager->flush();
-    }
-
-    /**
-     * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
-     */
-    public function postPersistShop(\Enlight_Event_EventArgs $eventArgs)
-    {
-        $modelManager = $this->container->get('models');
-
-        /** @var \Shopware\Models\Shop\Shop $shop */
-        $shop = $eventArgs->get('entity');
-
-        $blisstributeShop = new \Shopware\CustomModels\Blisstribute\BlisstributeShop();
-        $blisstributeShop->setShop($shop)->setAdvertisingMediumCode('');
-
-        $modelManager->persist($blisstributeShop);
-        $modelManager->flush();
-    }
-
-    /**
-     * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
-     */
-    public function preRemoveShop(\Enlight_Event_EventArgs $eventArgs)
-    {
-        $modelManager = $this->container->get('models');
-
-        /** @var Shopware\Models\Shop\ $blisstributeShop */
-        $shop = $eventArgs->get('entity');
-
-        $repository = $modelManager->getRepository('\Shopware\CustomModels\Blisstribute\BlisstributeShop');
-        $blisstributeShop = $repository->findOneByShop($shop->getId());
-        if ($blisstributeShop === null) {
-            return;
-        }
-
-        $modelManager->remove($blisstributeShop);
         $modelManager->flush();
     }
 
