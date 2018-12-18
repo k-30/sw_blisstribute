@@ -3,16 +3,16 @@
 namespace Shopware\CustomModels\Blisstribute;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping AS ORM;
-use Shopware\Models\Order\Order;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Order\Order;
 
 /**
  * database entity for blisstribute shipping request
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="Shopware\CustomModels\Blisstribute\BlisstributeShippingRequestRepository")
@@ -23,7 +23,7 @@ class BlisstributeShippingRequest extends ModelEntity
     /**
      * Primary Key - autoincrement value
      *
-     * @var integer $id
+     * @var int $id
      *
      * @ORM\Id
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -111,6 +111,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -130,6 +131,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -149,6 +151,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setModifiedAt(\DateTime $modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
+
         return $this;
     }
 
@@ -170,6 +173,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setOrder($order)
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -189,6 +193,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setNumber($number)
     {
         $this->number = $number;
+
         return $this;
     }
 
@@ -208,6 +213,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setCarrierCode($carrierCode)
     {
         $this->carrierCode = $carrierCode;
+
         return $this;
     }
 
@@ -227,6 +233,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setTrackingCode($trackingCode)
     {
         $this->trackingCode = $trackingCode;
+
         return $this;
     }
 
@@ -246,6 +253,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function setShippingRequestItemCollection($shippingRequestItemCollection)
     {
         $this->shippingRequestItemCollection = $shippingRequestItemCollection;
+
         return $this;
     }
 
@@ -259,6 +267,7 @@ class BlisstributeShippingRequest extends ModelEntity
     public function addShippingRequestItem(BlisstributeShippingRequestItems $shippingRequestItems)
     {
         $this->shippingRequestItemCollection->add($shippingRequestItems);
+
         return $this;
     }
 

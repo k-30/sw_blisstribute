@@ -9,8 +9,8 @@ use Shopware\Models\Article\Detail;
  * abstract class for blisstribute custom api article extension resource
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Api\Resource
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 abstract class BtArticleResource extends Resource
@@ -22,10 +22,10 @@ abstract class BtArticleResource extends Resource
      * @param string $articleNumber
      * @param string $ean
      *
-     * @return int
-     *
      * @throws \Shopware\Components\Api\Exception\NotFoundException
      * @throws \Shopware\Components\Api\Exception\ParameterMissingException
+     *
+     * @return int
      */
     public function getIdFromVhsNumber($vhsNumber, $articleNumber = '', $ean = '')
     {
@@ -34,8 +34,8 @@ abstract class BtArticleResource extends Resource
         }
 
         $articleId = $this->getManager()->getConnection()->fetchColumn(
-            "SELECT articledetailsID FROM s_articles_attributes WHERE blisstribute_vhs_number = :vhsNumber",
-            array(':vhsNumber' => $vhsNumber)
+            'SELECT articledetailsID FROM s_articles_attributes WHERE blisstribute_vhs_number = :vhsNumber',
+            [':vhsNumber' => $vhsNumber]
         );
 
         if (!empty($articleId)) {
@@ -43,8 +43,8 @@ abstract class BtArticleResource extends Resource
         }
 
         $articleId = $this->getManager()->getConnection()->fetchColumn(
-            "SELECT id from s_articles_details WHERE ordernumber = :articleNumber",
-            array(':articleNumber' => $articleNumber)
+            'SELECT id from s_articles_details WHERE ordernumber = :articleNumber',
+            [':articleNumber' => $articleNumber]
         );
 
         if (!empty($articleId)) {
@@ -52,8 +52,8 @@ abstract class BtArticleResource extends Resource
         }
 
         $articleId = $this->getManager()->getConnection()->fetchColumn(
-            "SELECT id from s_articles_details WHERE ean = :articleEan",
-            array(':articleEan' => $ean)
+            'SELECT id from s_articles_details WHERE ean = :articleEan',
+            [':articleEan' => $ean]
         );
 
         if (empty($articleId)) {
@@ -68,13 +68,13 @@ abstract class BtArticleResource extends Resource
      *
      * @param array $data
      *
-     * @return Detail
-     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\TransactionRequiredException
      * @throws \Shopware\Components\Api\Exception\NotFoundException
      * @throws \Shopware\Components\Api\Exception\ParameterMissingException
+     *
+     * @return Detail
      */
     public function getDetailArticleByData(array $data)
     {
@@ -99,7 +99,7 @@ abstract class BtArticleResource extends Resource
     /**
      * Returns the primary ID of any data set.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdByData($data)
     {

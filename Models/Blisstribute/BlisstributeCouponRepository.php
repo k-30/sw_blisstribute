@@ -9,8 +9,8 @@ use Shopware\Components\Model\ModelRepository;
  * blisstribute shipment mapping entity repository
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class BlisstributeCouponRepository extends ModelRepository
@@ -20,9 +20,9 @@ class BlisstributeCouponRepository extends ModelRepository
      *
      * @param int $couponId
      *
-     * @return BlisstributeCoupon|null
-     *
      * @throws NonUniqueResultException
+     *
+     * @return null|BlisstributeCoupon
      */
     public function findByCoupon($couponId)
     {

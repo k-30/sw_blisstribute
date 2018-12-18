@@ -4,8 +4,8 @@
  * blisstribute custom api order extension controller
  *
  * @author    Conrad Gülzow
- * @package   Shopware\Controllers\Api\Btorders
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Controllers_Api_Btorders extends Shopware_Controllers_Api_Rest
@@ -33,11 +33,11 @@ class Shopware_Controllers_Api_Btorders extends Shopware_Controllers_Api_Rest
         $order = $this->resource->update($orderNumber, $params);
         $location = $this->apiBaseUrl . 'btorders/' . $order->getId();
 
-        $data = array(
+        $data = [
             'id' => $order->getId(),
-            'location' => $location
-        );
+            'location' => $location,
+        ];
 
-        $this->View()->assign(array('success' => true, 'data' => $data));
+        $this->View()->assign(['success' => true, 'data' => $data]);
     }
 }

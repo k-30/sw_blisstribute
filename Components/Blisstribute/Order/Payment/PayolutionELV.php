@@ -6,20 +6,19 @@ require_once __DIR__ . '/AbstractExternalPayment.php';
  * payolution bill payment implementation
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Blisstribute\Order\Payment
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
-class Shopware_Components_Blisstribute_Order_Payment_PayolutionELV
-    extends Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment
+class Shopware_Components_Blisstribute_Order_Payment_PayolutionELV extends Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected $code = 'payolutionELV';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function checkPaymentStatus()
     {
@@ -42,7 +41,7 @@ class Shopware_Components_Blisstribute_Order_Payment_PayolutionELV
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getAdditionalPaymentInformation()
     {
@@ -53,9 +52,9 @@ class Shopware_Components_Blisstribute_Order_Payment_PayolutionELV
             );
         }
 
-        return array(
+        return [
             'resToken' => trim($orderAttribute->getPayolutionUniqueId()),
             'cardAlias' => trim($orderAttribute->getPayolutionPaymentReferenceId()),
-        );
+        ];
     }
 }

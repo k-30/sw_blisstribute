@@ -9,8 +9,8 @@ use Shopware\Components\Model\ModelRepository;
  * blisstribute shipment mapping entity repository
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class BlisstributeShipmentRepository extends ModelRepository
@@ -20,9 +20,9 @@ class BlisstributeShipmentRepository extends ModelRepository
      *
      * @param int $shipmentId
      *
-     * @return BlisstributeShipment|null
-     *
      * @throws NonUniqueResultException
+     *
+     * @return null|BlisstributeShipment
      */
     public function findOneByShipment($shipmentId)
     {

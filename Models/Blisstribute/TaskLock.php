@@ -2,7 +2,7 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -10,8 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * model entity for task lock
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="TaskLockRepository")
@@ -22,7 +22,7 @@ class TaskLock extends ModelEntity
     /**
      * Primary Key - autoincrement value
      *
-     * @var integer $id
+     * @var int $id
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -47,7 +47,7 @@ class TaskLock extends ModelEntity
     /**
      * @var \DateTime
      *
-     * @Assert\DateTime()
+     * @Assert\DateTime
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt = 'now';
@@ -58,7 +58,6 @@ class TaskLock extends ModelEntity
      * @ORM\Column(name="tries", type="smallint", nullable=false)
      */
     private $tries = 0;
-
 
     public function __construct()
     {
@@ -83,11 +82,13 @@ class TaskLock extends ModelEntity
 
     /**
      * @param string $taskName
+     *
      * @return $this
      */
     public function setTaskName($taskName)
     {
         $this->taskName = $taskName;
+
         return $this;
     }
 
@@ -101,11 +102,13 @@ class TaskLock extends ModelEntity
 
     /**
      * @param int $taskPid
+     *
      * @return $this
      */
     public function setTaskPid($taskPid)
     {
         $this->taskPid = $taskPid;
+
         return $this;
     }
 
@@ -119,11 +122,13 @@ class TaskLock extends ModelEntity
 
     /**
      * @param \DateTime $createdAt
+     *
      * @return $this
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -137,11 +142,13 @@ class TaskLock extends ModelEntity
 
     /**
      * @param int $tries
+     *
      * @return $this
      */
     public function setTries($tries)
     {
         $this->tries = $tries;
+
         return $this;
     }
 }

@@ -2,16 +2,16 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Doctrine\ORM\Mapping AS ORM;
-use Shopware\Models\Order\Order;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Order\Order;
 
 /**
  * blisstribute order entity
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="BlisstributeOrderRepository")
@@ -116,7 +116,7 @@ class BlisstributeOrder extends ModelEntity
     /**
      * last transfer error
      *
-     * @var string|null
+     * @var null|string
      *
      * @ORM\Column(name="transfer_error_comment", type="string", nullable=true)
      */
@@ -132,6 +132,7 @@ class BlisstributeOrder extends ModelEntity
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -155,6 +156,7 @@ class BlisstributeOrder extends ModelEntity
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -178,6 +180,7 @@ class BlisstributeOrder extends ModelEntity
     public function setModifiedAt(\DateTime $modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
+
         return $this;
     }
 
@@ -201,6 +204,7 @@ class BlisstributeOrder extends ModelEntity
     public function setLastCronAt(\DateTime $lastCronAt)
     {
         $this->lastCronAt = $lastCronAt;
+
         return $this;
     }
 
@@ -224,6 +228,7 @@ class BlisstributeOrder extends ModelEntity
     public function setOrder(Order $order)
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -247,6 +252,7 @@ class BlisstributeOrder extends ModelEntity
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -270,6 +276,7 @@ class BlisstributeOrder extends ModelEntity
     public function setTries($tries)
     {
         $this->tries = $tries;
+
         return $this;
     }
 
@@ -293,6 +300,7 @@ class BlisstributeOrder extends ModelEntity
     public function setErrorComment($errorComment)
     {
         $this->errorComment = $errorComment;
+
         return $this;
     }
 

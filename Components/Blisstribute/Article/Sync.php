@@ -14,8 +14,8 @@ use Shopware\CustomModels\Blisstribute\BlisstributeArticle;
  * article sync service
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Blisstribute\Article
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_Blisstribute_Sync
@@ -34,14 +34,13 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
      */
     protected $taskName = 'article_sync';
 
-
     /**
      * sync all transferable articles to blisstribute
      *
-     * @return bool
-     *
      * @throws Exception
      * @throws Shopware_Components_Blisstribute_Exception_ArticleNotChangedException
+     *
+     * @return bool
      */
     public function processBatchArticleSync()
     {
@@ -52,6 +51,7 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
             $this->lockTask();
         } catch (Exception $ex) {
             $this->logMessage('exception occurred::' . $ex->getMessage(), __FUNCTION__, Logger::ERROR);
+
             return false;
         }
 
@@ -61,8 +61,8 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
             $articleCollection = $articleRepository->findTransferableArticles($startDate);
 
             $page = 1;
-            $articleDataCollection = array();
-            $articleSyncCollection = array();
+            $articleDataCollection = [];
+            $articleSyncCollection = [];
 
             $status = true;
             while (count($articleCollection) > 0) {
@@ -147,15 +147,14 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
 
                     if (count($articleDataCollection) >= static::TRANSFER_LIMIT) {
                         $this->transferBatchCollection($articleDataCollection, $articleSyncCollection);
-                        $articleDataCollection = array();
-                        $articleSyncCollection = array();
+                        $articleDataCollection = [];
+                        $articleSyncCollection = [];
                     }
-
                 }
 
                 $this->modelManager->flush();
 
-                $page++;
+                ++$page;
                 $articleCollection = $articleRepository->findTransferableArticles($startDate);
 
                 $this->logMessage('end::page ' . $page, __FUNCTION__);
@@ -234,7 +233,7 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
                     ->setTries(0)
                     ->setComment(null);
 
-                $this->transferBatchCollection(array($articleData), array($blisstributeArticle));
+                $this->transferBatchCollection([$articleData], [$blisstributeArticle]);
             }
         } catch (Shopware_Components_Blisstribute_Exception_ArticleNotChangedException $ex) {
             $this->logMessage(
@@ -263,6 +262,7 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
         $this->modelManager->flush();
 
         $this->unlockTask();
+
         return $result;
     }
 
@@ -281,6 +281,7 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
         $result = $soapClient->syncArticleCollection($articleCollection);
 
         $this->logMessage('end sync', __FUNCTION__);
+
         return $result;
     }
 
@@ -289,13 +290,13 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
      *
      * @param ModelEntity $modelEntity
      *
-     * @return array
-     *
      * @throws Shopware_Components_Blisstribute_Exception_ArticleNotChangedException
+     *
+     * @return array
      */
     protected function initializeModelMapping(ModelEntity $modelEntity)
     {
-        /** @var BlisstributeArticle  $modelEntity */
+        /** @var BlisstributeArticle $modelEntity */
         $this->logMessage('start blisstribute article id::' . $modelEntity->getId(), __FUNCTION__);
         $this->logMessage('start sw article id::' . $modelEntity->getArticle()->getId(), __FUNCTION__);
 
@@ -315,24 +316,25 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
         }
 
         $this->logMessage('done::' . $modelEntity->getArticle()->getMainDetail()->getNumber(), __FUNCTION__);
+
         return $articleData;
     }
 
     /**
      * transfer article batch to blisstribute
      *
-     * @param array $articleDataCollection
+     * @param array                 $articleDataCollection
      * @param BlisstributeArticle[] $articleCollection
      *
      * @return void
      */
-    protected function transferBatchCollection(array $articleDataCollection , array $articleCollection)
+    protected function transferBatchCollection(array $articleDataCollection, array $articleCollection)
     {
         $this->logMessage('start batch transfer', __FUNCTION__);
 
         try {
-            $response = $this->processArticleSync(array('materialData' => $articleDataCollection));
-            
+            $response = $this->processArticleSync(['materialData' => $articleDataCollection]);
+
             if (!isset($response['materialConfirmationData']) || empty($response['materialConfirmationData'])) {
                 throw new Shopware_Components_Blisstribute_Exception_TransferException('no or invalid response given');
             }
@@ -379,10 +381,10 @@ class Shopware_Components_Blisstribute_Article_Sync extends Shopware_Components_
                 $sql = 'UPDATE s_articles_attributes SET blisstribute_vhs_number = :vhsArticleNumber WHERE articledetailsID = (
                   SELECT id from s_articles_details WHERE ordernumber = :articleNumber
                 )';
-                Shopware()->Db()->query($sql, array(
+                Shopware()->Db()->query($sql, [
                     'vhsArticleNumber' => trim($currentConfirmationData['erpArticleNumber']),
-                    'articleNumber' => trim($currentConfirmationData['articleNumber'])
-                ));
+                    'articleNumber' => trim($currentConfirmationData['articleNumber']),
+                ]);
 
                 $this->logDebug('processing done for vhs article number ' . trim($currentConfirmationData['erpArticleNumber']));
             } catch (Exception $ex) {

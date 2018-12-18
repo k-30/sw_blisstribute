@@ -6,8 +6,8 @@ use Shopware\CustomModels\Blisstribute\BlisstributeShipmentRepository;
  * blisstribute article controller
  *
  * @author    Julian Engler
- * @package   Shopware\Controllers\Backend\BlisstributeArticle
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @method BlisstributeShipmentRepository getRepository()
@@ -35,7 +35,7 @@ class Shopware_Controllers_Backend_BlisstributeShipmentMapping extends Shopware_
     {
         $builder = parent::getListQuery();
         $builder->innerJoin('blisstribute_shipment_mapping.shipment', 's');
-        $builder->addSelect(array('s'));
+        $builder->addSelect(['s']);
 
         return $builder;
     }

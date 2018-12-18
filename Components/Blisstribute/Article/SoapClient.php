@@ -6,8 +6,8 @@ require_once __DIR__ . '/../SoapClient.php';
  * article soap client
  *
  * @author    Julian Engler
- * @package   Shopware_Components_Blisstribute_Article_SoapClient
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Components_Blisstribute_Article_SoapClient extends Shopware_Components_Blisstribute_SoapClient
@@ -26,7 +26,6 @@ class Shopware_Components_Blisstribute_Article_SoapClient extends Shopware_Compo
      */
     public function syncArticleCollection(array $articleCollection)
     {
-        $response = $this->sendActionRequest('processMaterialRegistration', $articleCollection);
-        return $response;
+        return $this->sendActionRequest('processMaterialRegistration', $articleCollection);
     }
 }

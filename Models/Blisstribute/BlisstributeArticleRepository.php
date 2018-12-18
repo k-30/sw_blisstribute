@@ -24,18 +24,14 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Shopware\Components\Model\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Shopware\Components\Model\ModelRepository;
-
-use Shopware\CustomModels\Blisstribute\BlisstributeArticle;
 
 /**
  * blisstribute article db repository class
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @method BlisstributeArticle find($id, $lockMode = null, $lockVersion = null)
@@ -66,6 +62,7 @@ class BlisstributeArticleRepository extends ModelRepository
     public function fetchByArticleIdList(array $articleIdCollection)
     {
         $builder = $this->createQueryBuilder('ba');
+
         return $builder->where($builder->expr()->in('ba.article', $articleIdCollection))
             ->getQuery()
             ->getResult();
@@ -81,7 +78,8 @@ class BlisstributeArticleRepository extends ModelRepository
     public function fetchByArticleId($articleId)
     {
         $builder = $this->createQueryBuilder('ba');
-        return $builder->where('ba.article = ' . (int)$articleId)
+
+        return $builder->where('ba.article = ' . (int) $articleId)
             ->getQuery()
             ->getOneOrNullResult(1);
     }
@@ -99,10 +97,10 @@ class BlisstributeArticleRepository extends ModelRepository
             ->where('ba.triggerSync = 1')
             ->andWhere('ba.tries < :tries')
             ->andWhere('ba.lastCronAt <= :lastCronAt')
-            ->setParameters(array(
+            ->setParameters([
                 'tries' => static::MAX_SYNC_TRIES,
                 'lastCronAt' => $exportDate->format('Y-m-d H:i:s'),
-            ))
+            ])
             ->setMaxResults(static::PAGE_LIMIT)
             ->getQuery()
             ->getResult();

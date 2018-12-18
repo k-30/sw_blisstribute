@@ -2,7 +2,7 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
 use Shopware\Models\Order\Detail;
 
@@ -10,8 +10,8 @@ use Shopware\Models\Order\Detail;
  * database entity for blisstribute shipping request items
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="Shopware\CustomModels\Blisstribute\BlisstributeShippingRequestItemsRepository")
@@ -22,7 +22,7 @@ class BlisstributeShippingRequestItems extends ModelEntity
     /**
      * Primary Key - autoincrement value
      *
-     * @var integer $id
+     * @var int $id
      *
      * @ORM\Id
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -105,6 +105,7 @@ class BlisstributeShippingRequestItems extends ModelEntity
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -124,6 +125,7 @@ class BlisstributeShippingRequestItems extends ModelEntity
     public function setModifiedAt($modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
+
         return $this;
     }
 
@@ -143,6 +145,7 @@ class BlisstributeShippingRequestItems extends ModelEntity
     public function setShippingRequest($shippingRequest)
     {
         $this->shippingRequest = $shippingRequest;
+
         return $this;
     }
 
@@ -162,6 +165,7 @@ class BlisstributeShippingRequestItems extends ModelEntity
     public function setOrderDetail($orderDetail)
     {
         $this->orderDetail = $orderDetail;
+
         return $this;
     }
 
@@ -181,6 +185,7 @@ class BlisstributeShippingRequestItems extends ModelEntity
     public function setQuantityReturned($quantityReturned)
     {
         $this->quantityReturned = $quantityReturned;
+
         return $this;
     }
 

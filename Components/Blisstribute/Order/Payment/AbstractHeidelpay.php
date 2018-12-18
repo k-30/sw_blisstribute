@@ -6,15 +6,14 @@ require_once __DIR__ . '/AbstractExternalPayment.php';
  * heidelpay abstract class
  *
  * @author    Florian Ressel
- * @package   Shopware\Components\Blisstribute\Order\Payment
  * @copyright Copyright (c) 2017
+ *
  * @since     1.0.0
  */
-class Shopware_Components_Blisstribute_Order_Payment_AbstractHeidelpay
-    extends Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment
+class Shopware_Components_Blisstribute_Order_Payment_AbstractHeidelpay extends Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function checkPaymentStatus()
     {
@@ -32,13 +31,13 @@ class Shopware_Components_Blisstribute_Order_Payment_AbstractHeidelpay
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getAdditionalPaymentInformation()
     {
-        return array(
+        return [
             'resToken' => trim($this->order->getTemporaryId()),
             'cardAlias' => trim($this->order->getTransactionId()),
-        );
+        ];
     }
 }

@@ -6,8 +6,8 @@ require_once __DIR__ . '/../SoapClient.php';
  * blisstribute order soap client
  *
  * @author    Julian Engler
- * @package   Shopware_Components_Blisstribute_Order_SoapClient
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Components_Blisstribute_Order_SoapClient extends Shopware_Components_Blisstribute_SoapClient
@@ -28,7 +28,6 @@ class Shopware_Components_Blisstribute_Order_SoapClient extends Shopware_Compone
      */
     public function syncOrder(array $orderCollection)
     {
-        $response = $this->sendActionRequest('receiveOrder', $orderCollection);
-        return $response;
+        return $this->sendActionRequest('receiveOrder', $orderCollection);
     }
 }

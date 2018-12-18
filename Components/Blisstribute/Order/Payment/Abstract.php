@@ -1,15 +1,15 @@
 <?php
 
-use Shopware\Models\Order\Order;
-use Shopware\Models\Order\Detail;
 use Shopware\CustomModels\Blisstribute\BlisstributePayment;
+use Shopware\Models\Order\Detail;
+use Shopware\Models\Order\Order;
 
 /**
  * abstract payment mapping
  *
  * @author    Julian Engler
- * @package   Shopware_Components_Blisstribute_Order_Payment_Abstract
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Components_Blisstribute_Order_Payment_Abstract
@@ -36,7 +36,7 @@ class Shopware_Components_Blisstribute_Order_Payment_Abstract
     protected $payment;
 
     /**
-     * @param Order $order
+     * @param Order               $order
      * @param BlisstributePayment $payment
      */
     public function __construct(Order $order, BlisstributePayment $payment)
@@ -45,24 +45,6 @@ class Shopware_Components_Blisstribute_Order_Payment_Abstract
         $this->payment = $payment;
 
         $this->checkPaymentStatus();
-    }
-
-    /**
-     * @return bool
-     *
-     * @throws Shopware_Components_Blisstribute_Exception_OrderPaymentMappingException
-     *
-     * @throws \Shopware_Components_Blisstribute_Exception_OrderPaymentMappingException
-     */
-    protected function checkPaymentStatus()
-    {
-//        if ($this->payment->getIsPayed() && $this->order->getPaymentStatus()->getId() != 12) {
-//            throw new Shopware_Components_Blisstribute_Exception_OrderPaymentMappingException(
-//                'payment status not cleared::manual review necessary::current status ' . $this->order->getPaymentStatus()->getId()
-//            );
-//        }
-
-        return true;
     }
 
     /**
@@ -85,18 +67,34 @@ class Shopware_Components_Blisstribute_Order_Payment_Abstract
             }
         }
 
-        $payment = array(
+        $payment = [
             'total' => round($paymentCosts, 6),
             'type' => $this->code,
-            'isPayed' => (bool)$this->payment->getIsPayed(),
-        );
+            'isPayed' => (bool) $this->payment->getIsPayed(),
+        ];
 
         if ($payment['isPayed']) {
             $payment['amountPayed'] = $this->order->getInvoiceAmount();
         }
 
-        $payment = array_merge($payment, $this->getAdditionalPaymentInformation());
-        return $payment;
+        return array_merge($payment, $this->getAdditionalPaymentInformation());
+    }
+
+    /**
+     * @throws Shopware_Components_Blisstribute_Exception_OrderPaymentMappingException
+     * @throws \Shopware_Components_Blisstribute_Exception_OrderPaymentMappingException
+     *
+     * @return bool
+     */
+    protected function checkPaymentStatus()
+    {
+//        if ($this->payment->getIsPayed() && $this->order->getPaymentStatus()->getId() != 12) {
+//            throw new Shopware_Components_Blisstribute_Exception_OrderPaymentMappingException(
+//                'payment status not cleared::manual review necessary::current status ' . $this->order->getPaymentStatus()->getId()
+//            );
+//        }
+
+        return true;
     }
 
     /**
@@ -114,6 +112,6 @@ class Shopware_Components_Blisstribute_Order_Payment_Abstract
      */
     protected function getAdditionalPaymentInformation()
     {
-        return array();
+        return [];
     }
 }

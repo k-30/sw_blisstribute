@@ -24,17 +24,17 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\NonUniqueResultException;
 use Shopware\Components\Model\ModelRepository;
 
 /**
  * db repository class for task lock
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class TaskLockRepository extends ModelRepository
@@ -44,13 +44,14 @@ class TaskLockRepository extends ModelRepository
      *
      * @param string $taskName
      *
-     * @return TaskLock
-     *
      * @throws NonUniqueResultException
+     *
+     * @return TaskLock
      */
     public function findByTaskName($taskName)
     {
         $query = $this->getTaskLockBaseDataQuery($taskName);
+
         return $query->getOneOrNullResult();
     }
 

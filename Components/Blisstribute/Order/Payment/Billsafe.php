@@ -9,11 +9,10 @@ require_once __DIR__ . '/AbstractExternalPayment.php';
  *
  * @author    Michael Möhlihs
  */
-class Shopware_Components_Blisstribute_Order_Payment_Billsafe
-    extends Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment
+class Shopware_Components_Blisstribute_Order_Payment_Billsafe extends Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected $code = 'billSafe';
 }

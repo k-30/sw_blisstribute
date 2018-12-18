@@ -2,8 +2,8 @@
 
 namespace Shopware\ExitBBlisstribute\Subscribers;
 
-use \Enlight\Event\SubscriberInterface;
-use \Shopware\Components\DependencyInjection\Container;
+use Enlight\Event\SubscriberInterface;
+use Shopware\Components\DependencyInjection\Container;
 
 require_once __DIR__ . '/../Components/Blisstribute/Order/GoogleAddressValidator.php';
 
@@ -21,17 +21,17 @@ class ServiceSubscriber implements SubscriberInterface
     {
         $this->container = Shopware()->Container();
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
-            'Enlight_Bootstrap_InitResource_blisstribute.google_address_validator' => 'onGetGoogleAddressValidator'
+            'Enlight_Bootstrap_InitResource_blisstribute.google_address_validator' => 'onGetGoogleAddressValidator',
         ];
     }
-    
+
     /**
      * @return string
      */

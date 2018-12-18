@@ -9,8 +9,8 @@ use Shopware\Components\Model\ModelRepository;
  * blisstribute payment mapping entity repository
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class BlisstributePaymentRepository extends ModelRepository
@@ -20,9 +20,9 @@ class BlisstributePaymentRepository extends ModelRepository
      *
      * @param int $paymentId
      *
-     * @return BlisstributePayment|null
-     *
      * @throws NonUniqueResultException
+     *
+     * @return null|BlisstributePayment
      */
     public function findOneByPayment($paymentId)
     {

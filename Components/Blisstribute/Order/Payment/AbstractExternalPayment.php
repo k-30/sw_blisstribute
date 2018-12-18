@@ -6,15 +6,14 @@ require_once __DIR__ . '/Abstract.php';
  * abstract class for external payments
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Blisstribute\Order\Payment
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
-abstract class Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment
-    extends Shopware_Components_Blisstribute_Order_Payment_Abstract
+abstract class Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPayment extends Shopware_Components_Blisstribute_Order_Payment_Abstract
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function checkPaymentStatus()
     {
@@ -28,12 +27,12 @@ abstract class Shopware_Components_Blisstribute_Order_Payment_AbstractExternalPa
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getAdditionalPaymentInformation()
     {
-        return array(
+        return [
             'resToken' => $this->order->getTransactionId(),
-        );
+        ];
     }
 }

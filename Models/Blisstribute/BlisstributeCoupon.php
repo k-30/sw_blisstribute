@@ -2,18 +2,16 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Doctrine\ORM\Mapping AS ORM;
-
-use Shopware\Models\Voucher\Voucher;
-use Shopware\Models\Dispatch\Dispatch;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Voucher\Voucher;
 
 /**
  * blisstribute shipment mapping entity
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="Shopware\CustomModels\Blisstribute\BlisstributeCouponRepository")
@@ -71,6 +69,7 @@ class BlisstributeCoupon extends ModelEntity
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -90,11 +89,12 @@ class BlisstributeCoupon extends ModelEntity
     public function setVoucher($voucher)
     {
         $this->voucher = $voucher;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsMoneyVoucher()
     {
@@ -102,13 +102,14 @@ class BlisstributeCoupon extends ModelEntity
     }
 
     /**
-     * @param boolean $isMoneyVoucher
+     * @param bool $isMoneyVoucher
      *
      * @return BlisstributeCoupon
      */
     public function setIsMoneyVoucher($isMoneyVoucher)
     {
         $this->isMoneyVoucher = $isMoneyVoucher;
+
         return $this;
     }
 }

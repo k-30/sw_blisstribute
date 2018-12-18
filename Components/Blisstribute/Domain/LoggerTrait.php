@@ -6,8 +6,8 @@ use Monolog\Logger;
  * abstract class for sync process
  *
  * @author    Roman Robel
- * @package   Shopware\Components\Blisstribute\Domain
  * @copyright Copyright (c) 2017
+ *
  * @since     1.0.0
  */
 trait Shopware_Components_Blisstribute_Domain_LoggerTrait
@@ -19,8 +19,6 @@ trait Shopware_Components_Blisstribute_Domain_LoggerTrait
 
     /**
      * @param string $message
-     *
-     * @return void
      */
     public function logInfo($message)
     {
@@ -29,8 +27,6 @@ trait Shopware_Components_Blisstribute_Domain_LoggerTrait
 
     /**
      * @param string $message
-     *
-     * @return void
      */
     public function logDebug($message)
     {
@@ -39,8 +35,6 @@ trait Shopware_Components_Blisstribute_Domain_LoggerTrait
 
     /**
      * @param string $message
-     *
-     * @return void
      */
     public function logWarn($message)
     {
@@ -49,9 +43,7 @@ trait Shopware_Components_Blisstribute_Domain_LoggerTrait
 
     /**
      * @param string $message
-     * @param int $level
-     *
-     * @return void
+     * @param int    $level
      */
     protected function _log($message, $level = Logger::INFO)
     {
@@ -62,5 +54,4 @@ trait Shopware_Components_Blisstribute_Domain_LoggerTrait
         $logMessage = 'blisstribute::' . $message;
         $this->_logger->log($level, $logMessage);
     }
-
 }

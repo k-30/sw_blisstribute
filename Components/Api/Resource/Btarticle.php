@@ -2,8 +2,8 @@
 
 namespace Shopware\Components\Api\Resource;
 
-use Shopware\Components\Api\Exception as ApiException;
 use Shopware\Components\Api\BatchInterface;
+use Shopware\Components\Api\Exception as ApiException;
 use Shopware\Models\Article\Detail;
 use Shopware_Components_Blisstribute_Domain_LoggerTrait;
 
@@ -13,8 +13,8 @@ require_once __DIR__ . '/../../Blisstribute/Domain/LoggerTrait.php';
  * blisstribute custom api article extension resource
  *
  * @author    Conrad Gülzow
- * @package   Shopware\Components\Api\Resource
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Btarticle extends BtArticleResource implements BatchInterface
@@ -34,9 +34,9 @@ class Btarticle extends BtArticleResource implements BatchInterface
      *
      * @param array $params
      *
-     * @return void
-     *
      * @throws \Shopware\Components\Api\Exception\NotFoundException
+     *
+     * @return void
      */
     public function create(array $params)
     {
@@ -44,11 +44,11 @@ class Btarticle extends BtArticleResource implements BatchInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function batch($data)
     {
-        $results = array();
+        $results = [];
         foreach ($data as $key => $currentData) {
             try {
                 $id = $this->getIdByData($currentData);
@@ -56,11 +56,11 @@ class Btarticle extends BtArticleResource implements BatchInterface
                     throw new ApiException\NotFoundException('entity identifier not found');
                 }
 
-                $results[$key] = array(
+                $results[$key] = [
                     'success' => true,
                     'operation' => 'update',
-                    'data' => $this->update($id, $currentData)
-                );
+                    'data' => $this->update($id, $currentData),
+                ];
 
                 if ($this->getResultMode() == self::HYDRATE_ARRAY) {
                     $results[$key]['data'] = Shopware()->Models()->toArray($results[$key]['data']);
@@ -75,11 +75,11 @@ class Btarticle extends BtArticleResource implements BatchInterface
                     $message = implode("\n", $ex->getViolations()->getIterator()->getArrayCopy());
                 }
 
-                $results[$key] = array(
+                $results[$key] = [
                     'success' => false,
                     'message' => $message,
-                    'trace' => $ex->getTraceAsString()
-                );
+                    'trace' => $ex->getTraceAsString(),
+                ];
             }
         }
 
@@ -90,11 +90,11 @@ class Btarticle extends BtArticleResource implements BatchInterface
      * @param $detailId
      * @param array $params
      *
-     * @return \Shopware\Models\Article\Detail
-     *
      * @throws \Shopware\Components\Api\Exception\ValidationException
      * @throws \Shopware\Components\Api\Exception\NotFoundException
      * @throws \Shopware\Components\Api\Exception\ParameterMissingException
+     *
+     * @return \Shopware\Models\Article\Detail
      */
     public function update($detailId, array $params)
     {
@@ -103,18 +103,17 @@ class Btarticle extends BtArticleResource implements BatchInterface
 
         $config = Shopware()->Container()->get('shopware.plugin.config_reader')->getByPluginName('ExitBBlisstribute');
         $this->logDebug('plugin config loaded');
-        
+
         if (empty($detailId)) {
             throw new ApiException\ParameterMissingException();
         }
 
-
         $builder = $this->getManager()->createQueryBuilder();
-        $builder->select(array('detail', 'attribute'))
+        $builder->select(['detail', 'attribute'])
             ->from('Shopware\Models\Article\Detail', 'detail')
             ->leftJoin('detail.attribute', 'attribute')
             ->where('detail.id = :detailId')
-            ->setParameters(array('detailId' => $detailId));
+            ->setParameters(['detailId' => $detailId]);
 
         /** @var $detail \Shopware\Models\Article\Detail */
         $detail = $builder->getQuery()->getOneOrNullResult(self::HYDRATE_OBJECT);
@@ -133,20 +132,20 @@ class Btarticle extends BtArticleResource implements BatchInterface
         }
 
         switch ($status) {
-            case 0: {
+            case 0:
                 $params['active'] = false;
                 if ($syncLastStock) {
                     $params['lastStock'] = false;
                 }
                 break;
-            }
-            case 1: {
+
+            case 1:
                 $params['active'] = true;
                 if ($syncLastStock) {
                     $params['lastStock'] = false;
                 }
                 break;
-            }
+
             case 2:
                 $params['active'] = true;
                 if ($syncLastStock) {
@@ -154,7 +153,7 @@ class Btarticle extends BtArticleResource implements BatchInterface
                 }
                 break;
             case 3:
-            default: {
+            default:
                 if ($params['inStock'] > 0) {
                     $params['active'] = true;
                     if ($syncLastStock) {
@@ -168,7 +167,6 @@ class Btarticle extends BtArticleResource implements BatchInterface
                 }
 
                 break;
-            }
         }
 
         $params['shippingTime'] = ($timeFrom + 1) . ' - ' . ($timeTo + 1);
@@ -181,7 +179,7 @@ class Btarticle extends BtArticleResource implements BatchInterface
 
         $syncActive = false;
         if ($config['blisstribute-article-sync-sync-active-flag']) {
-            $this->logDebug(sprintf('%s - set detail active %s', $detailId, (int)$params['active']));
+            $this->logDebug(sprintf('%s - set detail active %s', $detailId, (int) $params['active']));
             $detail->setActive($params['active']);
             $syncActive = true;
         }
@@ -224,15 +222,15 @@ class Btarticle extends BtArticleResource implements BatchInterface
         $this->getManager()->persist($attributes);
 
         $article = $detail->getArticle();
-        if ($syncLastStock) {			
+        if ($syncLastStock) {
             if (version_compare(Shopware()->Config()->version, '5.4.0', '<')) {
-                $this->logDebug(sprintf('%s - set article lastStock %s', $article->getId(), (int)$params['lastStock']));
+                $this->logDebug(sprintf('%s - set article lastStock %s', $article->getId(), (int) $params['lastStock']));
                 $article->setLastStock($params['lastStock']);
 
                 $this->getManager()->persist($article);
                 $this->logDebug(sprintf('%s - article saved', $article->getId()));
             } else {
-                $this->logDebug(sprintf('%s - set detail lastStock %s', $detailId, (int)$params['lastStock']));
+                $this->logDebug(sprintf('%s - set detail lastStock %s', $detailId, (int) $params['lastStock']));
                 $detail->setLastStock($params['lastStock']);
 
                 $this->getManager()->persist($detail);
@@ -284,13 +282,12 @@ class Btarticle extends BtArticleResource implements BatchInterface
                     $article->setActive(false);
                 }
             }
-
         } else {
             if ($syncActive) {
                 $this->logDebug('configurator set is null');
                 $article->setActive($detail->getActive());
-                $this->logDebug(sprintf('%s - set single article active = %s', $article->getId(), (int)$detail->getActive()));
-                $this->logDebug('set article to ' . (int)$detail->getActive());
+                $this->logDebug(sprintf('%s - set single article active = %s', $article->getId(), (int) $detail->getActive()));
+                $this->logDebug('set article to ' . (int) $detail->getActive());
             }
         }
 

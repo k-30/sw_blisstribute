@@ -10,6 +10,51 @@ require_once __DIR__ . '/../Article/Sync.php';
 class Shopware_Components_Blisstribute_Command_ArticleExport extends ShopwareCommand
 {
     /**
+     * Little helper function for the ...ByVhsNumber methods
+     *
+     * @param string $vhsNumber
+     * @param string $articleNumber
+     * @param string $ean
+     *
+     * @throws \Shopware\Components\Api\Exception\NotFoundException
+     * @throws \Shopware\Components\Api\Exception\ParameterMissingException
+     *
+     * @return int
+     */
+    public function getIdFromVhsNumber($vhsNumber, $articleNumber = '', $ean = '')
+    {
+        $modelManager = $this->container->get('models');
+        $articleId = $modelManager->getConnection()->fetchColumn(
+            'SELECT articleId FROM s_articles_attributes WHERE blisstribute_vhs_number LIKE :vhsNumber',
+            [':vhsNumber' => $this->_makeValueMoreSearchable($vhsNumber)]
+        );
+
+        if (!empty($articleId)) {
+            return $articleId;
+        }
+
+        $articleId = $modelManager->getConnection()->fetchColumn(
+            'SELECT articleId from s_articles_details WHERE ordernumber LIKE :articleNumber',
+            [':articleNumber' => $this->_makeValueMoreSearchable($articleNumber)]
+        );
+
+        if (!empty($articleId)) {
+            return $articleId;
+        }
+
+        $articleId = $modelManager->getConnection()->fetchColumn(
+            'SELECT articleId from s_articles_details WHERE ean LIKE :articleEan',
+            [':articleEan' => $this->_makeValueMoreSearchable($ean)]
+        );
+
+        if (!empty($articleId)) {
+            return $articleId;
+        }
+
+        return 0;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -21,8 +66,7 @@ class Shopware_Components_Blisstribute_Command_ArticleExport extends ShopwareCom
             ->setHelp(<<<EOF
 The <info>%command.name%</info> exports a single order to blisstribute.
 EOF
-            )
-        ;
+            );
     }
 
     /**
@@ -42,7 +86,7 @@ EOF
             $output->writeln('<error>buuuhuu.. could not find article by identification ' . $identification . '. script terminated');
         }
 
-        $blisstributeArticle = $blisstributeArticleRepository->fetchByArticleId((int)$articleId);
+        $blisstributeArticle = $blisstributeArticleRepository->fetchByArticleId((int) $articleId);
         if (empty($blisstributeArticle)) {
             $output->writeln('<error>buuuhuu.. could not find blisstribute article by identification ' . $identification . '. script terminated');
         }
@@ -52,56 +96,12 @@ EOF
         );
         $result = $articleSync->processSingleArticleSync($blisstributeArticle);
 
-        $output->writeln('<info>export result: ' . (int)$result . '</info>');
-    }
-
-    /**
-     * Little helper function for the ...ByVhsNumber methods
-     *
-     * @param string $vhsNumber
-     * @param string $articleNumber
-     * @param string $ean
-     *
-     * @return int
-     *
-     * @throws \Shopware\Components\Api\Exception\NotFoundException
-     * @throws \Shopware\Components\Api\Exception\ParameterMissingException
-     */
-    public function getIdFromVhsNumber($vhsNumber, $articleNumber = '', $ean = '')
-    {
-        $modelManager = $this->container->get('models');
-        $articleId = $modelManager->getConnection()->fetchColumn(
-            "SELECT articleId FROM s_articles_attributes WHERE blisstribute_vhs_number LIKE :vhsNumber",
-            array(':vhsNumber' => $this->_makeValueMoreSearchable($vhsNumber))
-        );
-
-        if (!empty($articleId)) {
-            return $articleId;
-        }
-
-        $articleId = $modelManager->getConnection()->fetchColumn(
-            "SELECT articleId from s_articles_details WHERE ordernumber LIKE :articleNumber",
-            array(':articleNumber' => $this->_makeValueMoreSearchable($articleNumber))
-        );
-
-        if (!empty($articleId)) {
-            return $articleId;
-        }
-
-        $articleId = $modelManager->getConnection()->fetchColumn(
-            "SELECT articleId from s_articles_details WHERE ean LIKE :articleEan",
-            array(':articleEan' => $this->_makeValueMoreSearchable($ean))
-        );
-
-        if (!empty($articleId)) {
-            return $articleId;
-        }
-
-        return 0;
+        $output->writeln('<info>export result: ' . (int) $result . '</info>');
     }
 
     /**
      * @param string $input
+     *
      * @return string
      */
     private function _makeValueMoreSearchable($input)

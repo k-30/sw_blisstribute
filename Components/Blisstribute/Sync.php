@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/Domain/LoggerTrait.php');
+require_once __DIR__ . '/Domain/LoggerTrait.php';
 
 use Monolog\Logger;
 use Shopware\Components\Model\ModelEntity;
@@ -11,8 +11,8 @@ use Shopware\CustomModels\Blisstribute\TaskLock;
  * abstract class for sync process
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Blisstribute\Sync
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 abstract class Shopware_Components_Blisstribute_Sync
@@ -42,21 +42,6 @@ abstract class Shopware_Components_Blisstribute_Sync
     protected $lastError = '';
 
     /**
-     * log entry
-     *
-     * @param string $message log message
-     * @param string $method log message write
-     * @param int $logLevel log level, default info
-     *
-     * @return void
-     */
-    protected function logMessage($message, $method, $logLevel = Logger::INFO)
-    {
-        $logMessage = get_class($this) . '::' . $method . '::' . $message . '::memory ' . memory_get_usage(true);
-        $this->_log($logMessage, $logLevel);
-    }
-
-    /**
      * @param \Enlight_Config $config
      *
      * @throws Exception
@@ -69,18 +54,8 @@ abstract class Shopware_Components_Blisstribute_Sync
     }
 
     /**
-     * initialize model mapping
-     *
-     * @param ModelEntity $modelEntity
-     *
-     * @return array
-     */
-    abstract protected function initializeModelMapping(ModelEntity $modelEntity);
-
-    /**
      * lock sync task
      *
-     * @return void
      *
      * @throws Exception
      */
@@ -125,8 +100,6 @@ abstract class Shopware_Components_Blisstribute_Sync
 
     /**
      * unlock task
-     *
-     * @return void
      */
     public function unlockTask()
     {
@@ -152,6 +125,7 @@ abstract class Shopware_Components_Blisstribute_Sync
     public function setLastError($lastError)
     {
         $this->lastError = $lastError;
+
         return $this;
     }
 
@@ -164,4 +138,26 @@ abstract class Shopware_Components_Blisstribute_Sync
     {
         return $this->lastError;
     }
+
+    /**
+     * log entry
+     *
+     * @param string $message  log message
+     * @param string $method   log message write
+     * @param int    $logLevel log level, default info
+     */
+    protected function logMessage($message, $method, $logLevel = Logger::INFO)
+    {
+        $logMessage = get_class($this) . '::' . $method . '::' . $message . '::memory ' . memory_get_usage(true);
+        $this->_log($logMessage, $logLevel);
+    }
+
+    /**
+     * initialize model mapping
+     *
+     * @param ModelEntity $modelEntity
+     *
+     * @return array
+     */
+    abstract protected function initializeModelMapping(ModelEntity $modelEntity);
 }

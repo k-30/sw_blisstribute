@@ -2,19 +2,19 @@
 
 require_once __DIR__ . '/../SyncMapping.php';
 
-use Shopware\Models\Article\Detail;
+use Shopware\CustomModels\Blisstribute\BlisstributeArticle;
 use Shopware\Models\Article\Article;
+use Shopware\Models\Article\Detail;
 use Shopware\Models\Article\Price;
 use Shopware\Models\Category\Category;
-use Shopware\CustomModels\Blisstribute\BlisstributeArticle;
 use Shopware\Models\Tax\Tax;
 
 /**
  * mapping service to sync article information to blisstribute
  *
  * @author    Julian Engler
- * @package   Shopware_Components_Blisstribute_Article_SyncMapping
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @method BlisstributeArticle getModelEntity()
@@ -23,9 +23,15 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
 {
     private $container = null;
 
+    public function __construct()
+    {
+        $this->container = Shopware()->Container();
+    }
+
     /**
-     * @return mixed
      * @throws Exception
+     *
+     * @return mixed
      */
     protected function getConfig()
     {
@@ -35,7 +41,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             $this->logDebug('articleSyncMapping::load config done');
 
             return $c;
-        }catch (Exception $ex) {
+        } catch (Exception $ex) {
             $this->logWarn($ex->getMessage());
             throw $ex;
         }
@@ -49,11 +55,6 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
     protected function getArticle()
     {
         return $this->getModelEntity()->getArticle();
-    }
-
-    public function __construct()
-    {
-        $this->container = Shopware()->Container();
     }
 
     /**
@@ -71,9 +72,9 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             $removeDate = $this->getArticle()->getAvailableTo()->format('Y-m-d H:i:s');
         }
 
-        $articleData = array_merge($this->buildClassificationData(), array(
+        $articleData = array_merge($this->buildClassificationData(), [
             'articleType' => 'EQUIPMENT',
-            'releaseState' => (bool)$this->getArticle()->getActive(),
+            'releaseState' => (bool) $this->getArticle()->getActive(),
             'releaseDate' => $releaseDate,
             'removeDate' => $removeDate,
             'reorder' => true,
@@ -85,26 +86,26 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             'basePrice' => $this->getMainDetailBasePrice($this->getArticle()->getMainDetail()),
             'extractArticleSeries' => false,
             'vatCollection' => $this->buildVatCollection(),
-            'vendorCollection' => array(),
+            'vendorCollection' => [],
             'priceCollection' => $this->buildPriceCollection($this->getArticle()->getMainDetail()),
-            'seriesCollection' => array(),
-            'specificationCollection' => array(),
-        ));
+            'seriesCollection' => [],
+            'specificationCollection' => [],
+        ]);
 
         if ($this->getArticle()->getDetails()->count() > 1) {
             $articleData['seriesCollection'][] = $this->buildSeriesCollection();
         } else {
-            $articleData['specificationCollection'] = array($this->buildSpecificationCollection($this->getArticle()->getMainDetail()));
+            $articleData['specificationCollection'] = [$this->buildSpecificationCollection($this->getArticle()->getMainDetail())];
         }
 
         // Allow plugins to change the data
         return Enlight()->Events()->filter(
             'ExitBBlisstribute_ArticleSyncMapping_AfterBuildBaseData',
             $articleData,
-            array(
+            [
                 'subject' => $this,
-                'article' => $this->getArticle()
-            )
+                'article' => $this->getArticle(),
+            ]
         );
     }
 
@@ -117,6 +118,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
     {
         $fieldName = $this->getConfig()['blisstribute-article-mapping-classification3'];
         $this->logDebug('articleSyncMapping::classification3::fieldName ' . $fieldName);
+
         return $this->getClassification($article, $fieldName);
     }
 
@@ -129,12 +131,14 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
     {
         $fieldName = $this->getConfig()['blisstribute-article-mapping-classification4'];
         $this->logDebug('articleSyncMapping::classification4::fieldName ' . $fieldName);
+
         return $this->getClassification($article, $fieldName);
     }
 
     /**
      * @param Article $article
-     * @param string $fieldName
+     * @param string  $fieldName
+     *
      * @return string
      */
     protected function getClassification($article, $fieldName)
@@ -173,32 +177,13 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
     }
 
     /**
-     * @param Article $article
-     *
-     * @return Detail|null
-     */
-    private function _getMainDetail($article)
-    {
-        if ($article->getConfiguratorSet() != null) {
-            /** @var Detail $currentDetail */
-            foreach ($article->getDetails() as $currentDetail) {
-                if ($currentDetail->getKind() == 1) {
-                    return $currentDetail;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * build base classification data
      *
      * @return array
      */
     protected function buildClassificationData()
     {
-        $classificationData = array(
+        $classificationData = [
             'classification1' => $this->getArticle()->getName(),
             'classification2' => $this->getArticle()->getSupplier()->getName(),
             'classification3' => $this->getClassification3($this->getArticle()),
@@ -209,7 +194,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             'classification8' => '',
             'classification9' => '', // material
             'classification10' => $this->getArticle()->getMainDetail()->getWeight(), // weight
-        );
+        ];
 
         $key = 5;
         $categoryCollection = $this->getCategoryCollection();
@@ -219,7 +204,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             }
 
             $classificationData['classification' . $key] = $currentCategoryName;
-            $key++;
+            ++$key;
         }
 
         return $classificationData;
@@ -232,7 +217,8 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
     {
         /** @var \Doctrine\DBAL\Query\QueryBuilder $queryBuilder */
         $queryBuilder = Shopware()->Container()->get('dbal_connection')->createQueryBuilder();
-        $mainCategories = $queryBuilder->select('s1.category_id as id')
+
+        return $queryBuilder->select('s1.category_id as id')
             ->from('s_core_shops', 's1')
             ->leftJoin('s1', 's_core_shops', 's2', 's1.template_id = s2.template_id AND s2.default = 1 AND s1.id != s2.id')
             ->where('s1.active = 1')
@@ -240,20 +226,20 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             ->andWhere('s2.id IS NULL')
             ->orderBy('s1.id', 'ASC')
             ->execute()->fetchAll();
-
-        return $mainCategories;
     }
 
     /**
      * @param $category \Shopware\Models\Category\Category
      * @param $mainShopCategories array
+     *
      * @return bool
      */
     protected function isMainShopCategory($category, $mainShopCategories)
     {
         foreach ($mainShopCategories as $mainCategory) {
-            if (strpos($category->getPath(), "|{$mainCategory['id']}|") !== false)
+            if (strpos($category->getPath(), "|{$mainCategory['id']}|") !== false) {
                 return true;
+            }
         }
 
         return false;
@@ -295,11 +281,11 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         }
 
         if ($baseCategory == null) {
-            return array();
+            return [];
         }
 
         $categoryLimit = 0;
-        $categoryNameCollection = array($baseCategory->getName());
+        $categoryNameCollection = [$baseCategory->getName()];
         $this->logDebug('articleSyncMapping::getCategoryCollection::baseCategory::' . $baseCategory->getName());
         while ($baseCategory->getParent() != null && $categoryLimit < 10) {
             $baseCategory = $baseCategory->getParent();
@@ -309,10 +295,11 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             }
 
             $categoryNameCollection[] = trim($baseCategory->getName());
-            $categoryLimit++;
+            ++$categoryLimit;
         }
 
         $categoryNameCollection = array_reverse($categoryNameCollection);
+
         return array_slice($categoryNameCollection, 0, 4);
     }
 
@@ -324,7 +311,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
      */
     protected function buildVatCollection()
     {
-        $vatCollection = array();
+        $vatCollection = [];
         $articleTax = $this->getArticle()->getTax()->getTax();
         if ($articleTax > 10) {
             $vatType = 'HIGH';
@@ -337,14 +324,14 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         }
 
         $countryRepository = Shopware()->Models()->getRepository('Shopware\Models\Country\Country');
-        $germany = $countryRepository->findOneBy(array(
-            'iso' => 'DE'
-        ));
+        $germany = $countryRepository->findOneBy([
+            'iso' => 'DE',
+        ]);
 
-        $vatCollection[] = array(
+        $vatCollection[] = [
             'countryIsoCode' => $germany->getIso(),
-            'vatType' => $vatType
-        );
+            'vatType' => $vatType,
+        ];
 
         return $vatCollection;
     }
@@ -356,16 +343,16 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
      */
     protected function buildPriceCollection(Detail $articleDetail)
     {
-        $mappedPriceCollection = array();
+        $mappedPriceCollection = [];
         $shops = [
-            ['advertisingMediumCode' => '', 'currencyCode' => 'EUR', 'currencyFactor' => 1, 'customerGroup' => 'EK']
+            ['advertisingMediumCode' => '', 'currencyCode' => 'EUR', 'currencyFactor' => 1, 'customerGroup' => 'EK'],
         ];
 
         if ($this->getConfig()['blisstribute-transfer-shop-article-prices']) {
-            $shops = array_merge($shops, Shopware()->Db()->fetchAll("SELECT spbs.advertising_medium_code AS advertisingMediumCode, scc.currency as currencyCode, scc.factor AS currencyFactor, sccg.groupkey AS customerGroup FROM s_core_shops scs LEFT JOIN s_core_currencies scc ON scs.currency_id = scc.id LEFT JOIN s_core_customergroups sccg ON scs.customer_group_id = sccg.id LEFT JOIN s_plugin_blisstribute_shop spbs ON scs.id = spbs.s_shop_id WHERE scs.active = 1"));
+            $shops = array_merge($shops, Shopware()->Db()->fetchAll('SELECT spbs.advertising_medium_code AS advertisingMediumCode, scc.currency as currencyCode, scc.factor AS currencyFactor, sccg.groupkey AS customerGroup FROM s_core_shops scs LEFT JOIN s_core_currencies scc ON scs.currency_id = scc.id LEFT JOIN s_core_customergroups sccg ON scs.customer_group_id = sccg.id LEFT JOIN s_plugin_blisstribute_shop spbs ON scs.id = spbs.s_shop_id WHERE scs.active = 1'));
         }
 
-        foreach($shops as $shop) {
+        foreach ($shops as $shop) {
             $price = null;
 
             /** @var Price[] $priceCollection */
@@ -412,23 +399,23 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
      * Internal helper function to convert gross prices to net prices.
      *
      * @param string $advertisingMediumCode
-     * @param float $netPrice
-     * @param float $tax
+     * @param float  $netPrice
+     * @param float  $tax
      * @param string $currency
-     * @param bool $isRecommendedRetailPrice
+     * @param bool   $isRecommendedRetailPrice
      *
      * @return array
      */
     protected function formatPricesFromNetToGross($advertisingMediumCode, $netPrice, $tax, $currency, $isRecommendedRetailPrice = false)
     {
-        return array(
+        return [
             'isoCode' => 'DE',
             'currency' => $currency,
             'price' => round($netPrice / 100 * (100 + $tax), 6),
             'isRecommendedRetailPrice' => $isRecommendedRetailPrice,
             'advertisingMediumCode' => $advertisingMediumCode,
-            'isSpecialPrice' => false
-        );
+            'isSpecialPrice' => false,
+        ];
     }
 
     /**
@@ -439,25 +426,26 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
     protected function buildSeriesCollection()
     {
         if ($this->getArticle()->getMainDetail()->getConfiguratorOptions()->count() == 0) {
-            return array();
+            return [];
         }
 
         /** @var \Shopware\Models\Article\Configurator\Option $configuratorOption */
         $configuratorOption = $this->getArticle()->getMainDetail()->getConfiguratorOptions()->first();
 
-        $aSeriesData = array(
+        $aSeriesData = [
             'seriesType' => $configuratorOption->getGroup()->getName(),
-            'seriesCollection' => array(),
-            'specificationCollection' => array(),
-        );
+            'seriesCollection' => [],
+            'specificationCollection' => [],
+        ];
 
-        $specificationCollection = array();
+        $specificationCollection = [];
         /** @var Detail $currentArticleDetail */
         foreach ($this->getArticle()->getDetails() as $currentArticleDetail) {
             $specificationCollection[] = $this->buildSpecificationCollection($currentArticleDetail);
         }
 
         $aSeriesData['specificationCollection'] = $specificationCollection;
+
         return $aSeriesData;
     }
 
@@ -471,19 +459,21 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
     protected function buildSeriesCorrelation(Detail $articleDetail)
     {
         if ($articleDetail->getConfiguratorOptions()->count() == 0) {
-            return array();
+            return [];
         }
 
         /** @var \Shopware\Models\Article\Configurator\Option $configuratorOption */
         $configuratorOption = $articleDetail->getConfiguratorOptions()->first();
-        return array(
+
+        return [
             'seriesType' => trim($configuratorOption->getGroup()->getName()),
             'seriesAttribute' => trim($configuratorOption->getName()),
-        );
+        ];
     }
 
     /**
      * @param int $mediaId
+     *
      * @return string
      */
     protected function _loadImage($mediaId)
@@ -502,6 +492,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
 
     /**
      * @param Detail $articleDetail
+     *
      * @return string
      */
     protected function getImageUrl(Detail $articleDetail)
@@ -513,7 +504,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         $imageCollection = $detail['images'];
         if (count($imageCollection) == 0) {
             $sql = 'SELECT media_id FROM s_articles_img WHERE articleID = :articleId AND main = 1 AND media_id IS NOT NULL';
-            $mediaId = (int)Shopware()->Db()->fetchOne($sql, array('articleId' => (int)$articleDetail->getArticle()->getId()));
+            $mediaId = (int) Shopware()->Db()->fetchOne($sql, ['articleId' => (int) $articleDetail->getArticle()->getId()]);
 
             if ($mediaId) {
                 return $this->_loadImage($mediaId);
@@ -525,16 +516,16 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         $mediaId = 0;
         $parentId = 0;
         foreach ($imageCollection as $currentImageData) {
-            if ((int)$currentImageData['mediaId'] == 0) {
+            if ((int) $currentImageData['mediaId'] == 0) {
                 continue;
             }
 
-            $mediaId = (int)$currentImageData['mediaId'];
+            $mediaId = (int) $currentImageData['mediaId'];
             break;
         }
 
         if ($mediaId == 0) {
-            $parentId = (int)$imageCollection[0]['parentId'];
+            $parentId = (int) $imageCollection[0]['parentId'];
         }
 
         if ($parentId == 0) {
@@ -546,7 +537,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         }
 
         $sql = 'SELECT media_id FROM s_articles_img WHERE id = :parentId';
-        $mediaId = (int)Shopware()->Db()->fetchOne($sql, array('parentId' => (int)$parentId));
+        $mediaId = (int) Shopware()->Db()->fetchOne($sql, ['parentId' => (int) $parentId]);
 
         return $this->_loadImage($mediaId);
     }
@@ -570,7 +561,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             $articleDetail->getArticle()->getAvailableTo()->format('Y-m-d H:i:s');
         }
 
-        $specificationData = array(
+        return [
             'erpArticleNumber' => $this->getArticleVhsNumber($articleDetail),
             'articleNumber' => $articleDetail->getNumber(),
             'ean13' => $articleDetail->getEan(),
@@ -581,33 +572,142 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
             'imageUrl' => $this->getImageUrl($articleDetail),
             'releaseDate' => $releaseDate,
             'removeDate' => $removeDate,
-            'releaseState' => (bool)$this->determineArticleActiveState($articleDetail),
+            'releaseState' => (bool) $this->determineArticleActiveState($articleDetail),
             'setCount' => 1,
             'color' => '',
             'colorCode' => '',
             'size' => '',
             'sortingIndex' => 0,
             'reorder' => true,
-            'noticeStockLevel' => (int)$articleDetail->getStockMin(),
-            'reorderStockLevel' => (int)$articleDetail->getStockMin(),
-            'vendorCollection' => array(
-                array(
+            'noticeStockLevel' => (int) $articleDetail->getStockMin(),
+            'reorderStockLevel' => (int) $articleDetail->getStockMin(),
+            'vendorCollection' => [
+                [
                     'code' => $this->getSupplierCode($articleDetail),
                     'articleNumber' => $articleDetail->getSupplierNumber(),
                     'purchasePrice' => $this->getMainDetailBasePrice($articleDetail),
-                    'isPreferred' => true
-                )
-            ),
+                    'isPreferred' => true,
+                ],
+            ],
             'priceCollection' => $this->buildPriceCollection($articleDetail),
-            'seriesCorrelation' => array($this->buildSeriesCorrelation($articleDetail)),
+            'seriesCorrelation' => [$this->buildSeriesCorrelation($articleDetail)],
             'tagCollection' => $this->buildTagCollection($articleDetail),
-        );
+        ];
+    }
 
-        return $specificationData;
+    /**
+     * determine article detail name (with variant options in brackets)
+     *
+     * @param Detail $articleDetail
+     *
+     * @return string
+     */
+    protected function determineDetailArticleName(Detail $articleDetail)
+    {
+        $name = $articleDetail->getArticle()->getName();
+        if ($articleDetail->getConfiguratorOptions()->count() == 0) {
+            return $name;
+        }
+
+        $optionValueCollection = [];
+        /** @var \Shopware\Models\Article\Configurator\Option $currentConfiguratorOption */
+        foreach ($articleDetail->getConfiguratorOptions() as $currentConfiguratorOption) {
+            $optionValueCollection[] = $currentConfiguratorOption->getName();
+        }
+
+        $name .= ' (' . implode(' | ', $optionValueCollection) . ')';
+
+        return $name;
+    }
+
+    /**
+     * build tag collection
+     *
+     * @param Detail $articleDetail
+     *
+     * @return array
+     */
+    protected function buildTagCollection(Detail $articleDetail)
+    {
+        $tagCollection = [];
+        if ($articleDetail->getLen() !== null) {
+            $tagCollection[] = [
+                'type' => 'length',
+                'value' => $articleDetail->getLen(),
+                'isMultiTag' => false,
+                'deliverer' => 'foreign',
+            ];
+        }
+
+        if ($articleDetail->getWidth() !== null) {
+            $tagCollection[] = [
+                'type' => 'width',
+                'value' => $articleDetail->getWidth(),
+                'isMultiTag' => false,
+                'deliverer' => 'foreign',
+            ];
+        }
+
+        if ($articleDetail->getHeight() !== null) {
+            $tagCollection[] = [
+                'type' => 'height',
+                'value' => $articleDetail->getHeight(),
+                'isMultiTag' => false,
+                'deliverer' => 'foreign',
+            ];
+        }
+
+        /** @var \Shopware\Models\Property\Value $property */
+        foreach ($articleDetail->getArticle()->getPropertyValues() as $property) {
+            $tagCollection[] = [
+                'type' => $property->getOption()->getName(),
+                'value' => $property->getValue(),
+                'isMultiTag' => false,
+                'deliverer' => 'foreign',
+            ];
+        }
+
+        return $tagCollection;
+    }
+
+    /**
+     * get the base price of the main detail
+     *
+     * @param Detail $articleDetail
+     *
+     * @return float
+     */
+    protected function getMainDetailBasePrice(Detail $articleDetail)
+    {
+        if (version_compare(Shopware()->Config()->version, '5.2.0', '>=')) {
+            return $articleDetail->getPurchasePrice();
+        }
+
+        return $articleDetail->getPrices()->first()->getBasePrice();
+    }
+
+    /**
+     * @param Article $article
+     *
+     * @return null|Detail
+     */
+    private function _getMainDetail($article)
+    {
+        if ($article->getConfiguratorSet() != null) {
+            /** @var Detail $currentDetail */
+            foreach ($article->getDetails() as $currentDetail) {
+                if ($currentDetail->getKind() == 1) {
+                    return $currentDetail;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
      * @param Detail $articleDetail
+     *
      * @return mixed
      */
     private function getSupplierCode($articleDetail)
@@ -618,13 +718,14 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         }
 
         if (trim($supplierCode) == '') {
-            if ($articleDetail->getArticle() != null && $articleDetail->getArticle()->getAttribute() != null)
+            if ($articleDetail->getArticle() != null && $articleDetail->getArticle()->getAttribute() != null) {
                 $supplierCode = $articleDetail->getArticle()->getAttribute()->getBlisstributeSupplierCode();
+            }
         }
 
         $mainDetail = $this->_getMainDetail($articleDetail->getArticle());
         if (trim($supplierCode) == '') {
-             if ($mainDetail != null && $mainDetail->getAttribute() != null) {
+            if ($mainDetail != null && $mainDetail->getAttribute() != null) {
                 $supplierCode = $mainDetail->getAttribute()->getBlisstributeSupplierCode();
             }
         }
@@ -634,6 +735,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
 
     /**
      * @param Detail $articleDetail
+     *
      * @return string
      */
     private function getArticleVhsNumber($articleDetail)
@@ -663,6 +765,7 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
      * variants.
      *
      * @param Detail $articleDetail
+     *
      * @return bool
      */
     private function determineArticleActiveState($articleDetail)
@@ -673,95 +776,5 @@ class Shopware_Components_Blisstribute_Article_SyncMapping extends Shopware_Comp
         }
 
         return $articleDetail->getActive();
-    }
-
-    /**
-     * determine article detail name (with variant options in brackets)
-     *
-     * @param Detail $articleDetail
-     *
-     * @return string
-     */
-    protected function determineDetailArticleName(Detail $articleDetail)
-    {
-        $name = $articleDetail->getArticle()->getName();
-        if ($articleDetail->getConfiguratorOptions()->count() == 0) {
-            return $name;
-        }
-
-        $optionValueCollection = array();
-        /** @var \Shopware\Models\Article\Configurator\Option $currentConfiguratorOption */
-        foreach ($articleDetail->getConfiguratorOptions() as $currentConfiguratorOption) {
-            $optionValueCollection[] = $currentConfiguratorOption->getName();
-        }
-
-        $name .= ' (' . implode(' | ', $optionValueCollection) . ')';
-        return $name;
-    }
-
-    /**
-     * build tag collection
-     *
-     * @param Detail $articleDetail
-     *
-     * @return array
-     */
-    protected function buildTagCollection(Detail $articleDetail)
-    {
-        $tagCollection = array();
-        if ($articleDetail->getLen() !== null) {
-            $tagCollection[] = array(
-                'type' => 'length',
-                'value' => $articleDetail->getLen(),
-                'isMultiTag' => false,
-                'deliverer' => 'foreign'
-            );
-        }
-
-        if ($articleDetail->getWidth() !== null) {
-            $tagCollection[] = array(
-                'type' => 'width',
-                'value' => $articleDetail->getWidth(),
-                'isMultiTag' => false,
-                'deliverer' => 'foreign'
-            );
-        }
-
-        if ($articleDetail->getHeight() !== null) {
-            $tagCollection[] = array(
-                'type' => 'height',
-                'value' => $articleDetail->getHeight(),
-                'isMultiTag' => false,
-                'deliverer' => 'foreign'
-            );
-        }
-
-        /** @var \Shopware\Models\Property\Value $property */
-        foreach ($articleDetail->getArticle()->getPropertyValues() as $property) {
-            $tagCollection[] = array(
-                'type' => $property->getOption()->getName(),
-                'value' => $property->getValue(),
-                'isMultiTag' => false,
-                'deliverer' => 'foreign'
-            );
-        }
-
-        return $tagCollection;
-    }
-
-    /**
-     * get the base price of the main detail
-     *
-     * @param Detail $articleDetail
-     *
-     * @return float
-     */
-    protected function getMainDetailBasePrice(Detail $articleDetail)
-    {
-        if (version_compare(Shopware()->Config()->version, '5.2.0', '>=')) {
-            return $articleDetail->getPurchasePrice();
-        }
-
-        return $articleDetail->getPrices()->first()->getBasePrice();
     }
 }

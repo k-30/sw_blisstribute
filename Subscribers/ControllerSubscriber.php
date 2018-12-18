@@ -2,8 +2,8 @@
 
 namespace Shopware\ExitBBlisstribute\Subscribers;
 
-use \Enlight\Event\SubscriberInterface;
-use \Shopware\Components\DependencyInjection\Container;
+use Enlight\Event\SubscriberInterface;
+use Shopware\Components\DependencyInjection\Container;
 
 class ControllerSubscriber implements SubscriberInterface
 {
@@ -19,9 +19,9 @@ class ControllerSubscriber implements SubscriberInterface
     {
         $this->container = Shopware()->Container();
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -35,27 +35,16 @@ class ControllerSubscriber implements SubscriberInterface
             'Enlight_Controller_Dispatcher_ControllerPath_Backend_BlisstributePaymentMapping' => 'getPaymentMappingController',
             'Enlight_Controller_Dispatcher_ControllerPath_Backend_BlisstributeShopMapping' => 'getShopMappingController',
             'Enlight_Controller_Dispatcher_ControllerPath_Backend_BlisstributeCouponMapping' => 'getCouponMappingController',
-            
+
             // api controllers
             'Enlight_Controller_Dispatcher_ControllerPath_Api_Btorders' => 'getBtordersApiController',
             'Enlight_Controller_Dispatcher_ControllerPath_Api_Btarticles' => 'getBtarticlesApiController',
             'Enlight_Controller_Dispatcher_ControllerPath_Api_Btarticlestock' => 'getBtarticlestockApiController',
-            
+
             // others
             'Enlight_Controller_Action_PostDispatchSecure_Backend_Index' => 'onActionPostDispatchSecureBackendIndex',
-            'Enlight_Controller_Action_PostDispatch_Backend_Article' => 'onActionPostDispatchBackendArticle'
+            'Enlight_Controller_Action_PostDispatch_Backend_Article' => 'onActionPostDispatchBackendArticle',
         ];
-    }
-    
-    /**
-     * register directories
-     *
-     * @return void
-     */
-    protected function registerDirs()
-    {
-        $this->container->get('template')->addTemplateDir(__DIR__ . '/../Views/', 'blisstribute');
-        $this->container->get('snippets')->addConfigDir(__DIR__ . '/../Snippets/');
     }
 
     /**
@@ -68,6 +57,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getArticleTypeController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeArticleType.php';
     }
 
@@ -82,6 +72,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getArticleSyncController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeArticle.php';
     }
 
@@ -95,6 +86,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getArticleSyncCronController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeArticleSyncCron.php';
     }
 
@@ -108,6 +100,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getOrderController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeOrder.php';
     }
 
@@ -121,6 +114,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getOrderSyncCronController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeOrderSyncCron.php';
     }
 
@@ -134,6 +128,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getShipmentMappingController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeShipmentMapping.php';
     }
 
@@ -147,6 +142,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getPaymentMappingController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributePaymentMapping.php';
     }
 
@@ -160,6 +156,7 @@ class ControllerSubscriber implements SubscriberInterface
     public function getShopMappingController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeShopMapping.php';
     }
 
@@ -173,9 +170,10 @@ class ControllerSubscriber implements SubscriberInterface
     public function getCouponMappingController(\Enlight_Event_EventArgs $eventArgs)
     {
         $this->registerDirs();
+
         return __DIR__ . '/../Controllers/Backend/BlisstributeCouponMapping.php';
     }
-    
+
     /**
      * @return string
      */
@@ -183,7 +181,7 @@ class ControllerSubscriber implements SubscriberInterface
     {
         return __DIR__ . '/../Controllers/Api/Btorders.php';
     }
-    
+
     /**
      * @return string
      */
@@ -199,13 +197,13 @@ class ControllerSubscriber implements SubscriberInterface
     {
         return __DIR__ . '/../Controllers/Api/Btarticlestock.php';
     }
-    
+
     /**
      * add plugin menu to backend
      */
     public function onActionPostDispatchSecureBackendIndex(\Enlight_Controller_ActionEventArgs $args)
     {
-        /**@var $controller Shopware_Controllers_Frontend_Index */
+        /** @var $controller Shopware_Controllers_Frontend_Index */
         $controller = $args->getSubject();
 
         $view = $controller->View();
@@ -221,7 +219,7 @@ class ControllerSubscriber implements SubscriberInterface
             $view->extendsTemplate('backend/index/view/exitb_blisstribute/menu.js');
         }
     }
-    
+
     /**
      * add attribute to article
      *
@@ -235,5 +233,16 @@ class ControllerSubscriber implements SubscriberInterface
         if ($args->getRequest()->getActionName() === 'load') {
             $view->extendsTemplate('backend/attributes_article/model/attribute.js');
         }
+    }
+
+    /**
+     * register directories
+     *
+     * @return void
+     */
+    protected function registerDirs()
+    {
+        $this->container->get('template')->addTemplateDir(__DIR__ . '/../Views/', 'blisstribute');
+        $this->container->get('snippets')->addConfigDir(__DIR__ . '/../Snippets/');
     }
 }

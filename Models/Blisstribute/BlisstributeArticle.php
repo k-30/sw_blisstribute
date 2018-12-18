@@ -2,9 +2,9 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Doctrine\ORM\Mapping AS ORM;
-use Shopware\Models\Article\Article;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Article\Article;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,7 +16,7 @@ class BlisstributeArticle extends ModelEntity
     /**
      * Primary Key - autoincrement value
      *
-     * @var integer $id
+     * @var int $id
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -27,7 +27,7 @@ class BlisstributeArticle extends ModelEntity
     /**
      * @var \DateTime
      *
-     * @Assert\DateTime()
+     * @Assert\DateTime
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
@@ -35,7 +35,7 @@ class BlisstributeArticle extends ModelEntity
     /**
      * @var \DateTime
      *
-     * @Assert\DateTime()
+     * @Assert\DateTime
      * @ORM\Column(name="modified_at", type="datetime", nullable=false)
      */
     private $modifiedAt;
@@ -79,7 +79,7 @@ class BlisstributeArticle extends ModelEntity
     private $comment = null;
 
     /**
-     * @var integer $tries
+     * @var int $tries
      *
      * @ORM\Column(name="tries", type="smallint", nullable=false)
      */
@@ -97,7 +97,7 @@ class BlisstributeArticle extends ModelEntity
      */
     public function __construct()
     {
-        $this->createdAt  = new \DateTime();
+        $this->createdAt = new \DateTime();
         $this->modifiedAt = new \DateTime();
     }
 
@@ -109,6 +109,7 @@ class BlisstributeArticle extends ModelEntity
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -128,6 +129,7 @@ class BlisstributeArticle extends ModelEntity
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -147,6 +149,7 @@ class BlisstributeArticle extends ModelEntity
     public function setModifiedAt(\DateTime $modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
+
         return $this;
     }
 
@@ -168,6 +171,7 @@ class BlisstributeArticle extends ModelEntity
     public function setLastCronAt(\DateTime $lastCronAt)
     {
         $this->lastCronAt = $lastCronAt;
+
         return $this;
     }
 
@@ -189,6 +193,7 @@ class BlisstributeArticle extends ModelEntity
     public function setArticle($article)
     {
         $this->article = $article;
+
         return $this;
     }
 
@@ -209,38 +214,39 @@ class BlisstributeArticle extends ModelEntity
     }
 
     /**
-     * @param boolean $deleted
+     * @param bool $deleted
      *
      * @return BlisstributeArticle
      */
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDeleted()
     {
         return $this->deleted;
     }
 
-
     /**
-     * @param boolean $triggerSync
+     * @param bool $triggerSync
      *
      * @return BlisstributeArticle
      */
     public function setTriggerSync($triggerSync)
     {
         $this->triggerSync = $triggerSync;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTriggerSync()
     {
@@ -255,6 +261,7 @@ class BlisstributeArticle extends ModelEntity
     public function setComment($comment)
     {
         $this->comment = $comment;
+
         return $this;
     }
 
@@ -274,6 +281,7 @@ class BlisstributeArticle extends ModelEntity
     public function setTries($tries)
     {
         $this->tries = $tries;
+
         return $this;
     }
 
@@ -293,6 +301,7 @@ class BlisstributeArticle extends ModelEntity
     public function setSyncHash($syncHash)
     {
         $this->syncHash = $syncHash;
+
         return $this;
     }
 

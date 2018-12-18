@@ -14,19 +14,19 @@ use Shopware\CustomModels\Blisstribute\BlisstributeOrder;
  * blisstribute order sync
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Blisstribute\Order\Sync
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Blisstribute_Sync
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected $taskName = 'order_sync';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected $logBaseName = 'blisstribute_order_sync';
 
@@ -60,6 +60,7 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
         $this->unlockTask();
 
         $this->logMessage('end batch sync', __FUNCTION__);
+
         return true;
     }
 
@@ -67,7 +68,7 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
      * sync single order to blisstribute
      *
      * @param BlisstributeOrder $blisstributeOrder
-     * @param bool $force
+     * @param bool              $force
      *
      * @return bool
      */
@@ -96,20 +97,19 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
         $result = $this->processOrderSync($blisstributeOrder);
 
         $this->unlockTask();
-        
+
         return $result;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function initializeModelMapping(ModelEntity $modelEntity)
     {
         $syncMapping = new Shopware_Components_Blisstribute_Order_SyncMapping();
         $syncMapping->setModelEntity($modelEntity);
 
-        $orderData = $syncMapping->buildMapping();
-        return $orderData;
+        return $syncMapping->buildMapping();
     }
 
     /**
@@ -131,12 +131,12 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
                 /** @var Shopware_Components_Blisstribute_Order_GoogleAddressValidator $addressValidator */
                 $addressValidator = Shopware()->Container()->get('blisstribute.google_address_validator');
                 $addressValidatorResponse = $addressValidator->validateAddress($blisstributeOrder, $this->config);
-                    
+
                 if (!$addressValidatorResponse && !$this->config->get('blisstribute-transfer-orders')) {
                     throw new Exception('could not validate the order address.');
                 }
-            }        
-        
+            }
+
             $orderData = $this->initializeModelMapping($blisstributeOrder);
 
             $soapClient = new Shopware_Components_Blisstribute_Order_SoapClient($this->config);
@@ -179,7 +179,6 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
                 'Bestellung kann nicht übermittelt werden, da nicht alle notwendigen Felder gefüllt oder die ' .
                 'Zahlungs/Versandart nicht einer Blisstribute zugeordnet ist.'
             );
-
         } catch (Shopware_Components_Blisstribute_Exception_TransferException $ex) {
             $this->logMessage(
                 'transfer error::' . $blisstributeOrder->getOrder()->getNumber() . $ex->getMessage() . $ex->getTraceAsString(),
@@ -193,7 +192,6 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
                 ->setLastCronAt(new DateTime());
 
             $this->setLastError('Fehler bei der Übermittlung der Bestellung zu Blisstribute.');
-
         } catch (Exception $ex) {
             $this->logMessage(
                 'general sync error::' . $blisstributeOrder->getOrder()->getNumber() . $ex->getMessage() . $ex->getTraceAsString(),
@@ -213,6 +211,7 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
         $this->modelManager->flush();
 
         $this->logMessage('sync done::' . $blisstributeOrder->getOrder()->getNumber(), __FUNCTION__);
+
         return $result;
     }
 
@@ -221,9 +220,9 @@ class Shopware_Components_Blisstribute_Order_Sync extends Shopware_Components_Bl
      *
      * @param BlisstributeOrder $blisstributeOrder
      *
-     * @return bool
-     *
      * @throws Shopware_Components_Blisstribute_Exception_ValidationMappingException
+     *
+     * @return bool
      */
     protected function checkStatus(BlisstributeOrder $blisstributeOrder)
     {

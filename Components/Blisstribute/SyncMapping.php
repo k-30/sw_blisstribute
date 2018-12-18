@@ -8,18 +8,18 @@ use Shopware\Components\Model\ModelEntity;
  * interface for blisstribute sync mappings
  *
  * @author    Julian Engler
- * @package   Shopware_Components_Blisstribute_SyncMapping
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 abstract class Shopware_Components_Blisstribute_SyncMapping
 {
     use Shopware_Components_Blisstribute_Domain_LoggerTrait;
-    
+
     /**
      * model entity to map
      *
-     * @var ModelEntity|null
+     * @var null|ModelEntity
      */
     protected $modelEntity = null;
 
@@ -31,6 +31,7 @@ abstract class Shopware_Components_Blisstribute_SyncMapping
     public function setModelEntity($modelEntity)
     {
         $this->modelEntity = $modelEntity;
+
         return $this;
     }
 
@@ -45,9 +46,9 @@ abstract class Shopware_Components_Blisstribute_SyncMapping
     /**
      * map entity for sync to blisstribute
      *
-     * @return array
-     *
      * @throws Shopware_Components_Blisstribute_Exception_MappingException
+     *
+     * @return array
      */
     public function buildMapping()
     {
@@ -58,6 +59,7 @@ abstract class Shopware_Components_Blisstribute_SyncMapping
         $mappingData = $this->buildBaseData();
 
         $this->resetData();
+
         return $mappingData;
     }
 

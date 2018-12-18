@@ -4,8 +4,8 @@
  * blisstribute custom api order extension controller
  *
  * @author    Conrad Gülzow
- * @package   Shopware\Controllers\Api\Btorders
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Controllers_Api_Btarticlestock extends Shopware_Controllers_Api_Rest
@@ -17,8 +17,6 @@ class Shopware_Controllers_Api_Btarticlestock extends Shopware_Controllers_Api_R
 
     /**
      * init api controller
-     *
-     * @return void
      */
     public function init()
     {
@@ -27,8 +25,6 @@ class Shopware_Controllers_Api_Btarticlestock extends Shopware_Controllers_Api_R
 
     /**
      * list of article stock information
-     *
-     * @return void
      */
     public function indexAction()
     {
@@ -44,8 +40,6 @@ class Shopware_Controllers_Api_Btarticlestock extends Shopware_Controllers_Api_R
 
     /**
      * single article stock information
-     *
-     * @return void
      */
     public function getAction()
     {

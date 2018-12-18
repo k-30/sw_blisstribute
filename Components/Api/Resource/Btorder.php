@@ -11,8 +11,8 @@ use Shopware\CustomModels\Blisstribute\BlisstributeShippingRequestItems;
  * blisstribute custom api order extension resource
  *
  * @author    Conrad Gülzow
- * @package   Shopware\Components\Api\Resource
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Btorder extends Resource
@@ -36,47 +36,47 @@ class Btorder extends Resource
     /**
      * @param $params array
      *
-     * @return array
-     *
      * @throws \Shopware\Components\Api\Exception\NotFoundException
      * @throws \Shopware\Components\Api\Exception\ParameterMissingException
+     *
+     * @return array
      */
     public function getStateIdFromVhsId($params)
     {
-        $id = (int)$params["orderStatusId"];
+        $id = (int) $params['orderStatusId'];
 
-        if (in_array($id,array(10,15))) {
+        if (in_array($id, [10, 15])) {
             $state = 0;
-        } elseif (in_array($id, array(20, 21))) {
+        } elseif (in_array($id, [20, 21])) {
             $state = 1;
-        } elseif (in_array($id, array(25, 26, 30, 31))) {
+        } elseif (in_array($id, [25, 26, 30, 31])) {
             $state = 5;
-        } elseif (in_array($id, array(35))) {
+        } elseif (in_array($id, [35])) {
             $state = 3;
-        } elseif (in_array($id, array(40))) {
+        } elseif (in_array($id, [40])) {
             $state = 2;
-        } elseif (in_array($id, array(50))) {
+        } elseif (in_array($id, [50])) {
             $state = 4;
-        } elseif (in_array($id,array(60,61,62))) {
+        } elseif (in_array($id, [60, 61, 62])) {
             $state = 4;
         } else {
             $state = 8;
         }
 
-        $params["orderStatusId"] = $state;
+        $params['orderStatusId'] = $state;
 
         return $params;
     }
 
     /**
-     * @param int $orderNumber
+     * @param int   $orderNumber
      * @param array $params
-     *
-     * @return \Shopware\Models\Order\Order
      *
      * @throws \Shopware\Components\Api\Exception\ValidationException
      * @throws \Shopware\Components\Api\Exception\NotFoundException
      * @throws \Shopware\Components\Api\Exception\ParameterMissingException
+     *
+     * @return \Shopware\Models\Order\Order
      */
     public function update($orderNumber, array $params)
     {
@@ -89,7 +89,7 @@ class Btorder extends Resource
         $params = $this->getStateIdFromVhsId($params);
 
         /** @var $order \Shopware\Models\Order\Order */
-        $filters = array(array('property' => 'orders.number','expression' => '=','value' => $orderNumber));
+        $filters = [['property' => 'orders.number', 'expression' => '=', 'value' => $orderNumber]];
         $builder = $this->getOrderRepository()->getOrdersQueryBuilder($filters);
         $order = $builder->getQuery()->getOneOrNullResult(self::HYDRATE_OBJECT);
 
@@ -114,16 +114,16 @@ class Btorder extends Resource
 //
 //        $this->getManager()->persist($shippingRequest);
 
-        $statusId = (int)$params['orderStatusId'];
+        $statusId = (int) $params['orderStatusId'];
         $status = Shopware()->Models()->getRepository('Shopware\Models\Order\Status')->findOneBy(
-            array(
+            [
                 'id' => $statusId,
-                'group' => 'state'
-            )
+                'group' => 'state',
+            ]
         );
 
         if (empty($status)) {
-            throw new ApiException\NotFoundException("OrderStatus by id " . $statusId . " not found");
+            throw new ApiException\NotFoundException('OrderStatus by id ' . $statusId . ' not found');
         }
 
         $order->setOrderStatus($status);
@@ -146,7 +146,6 @@ class Btorder extends Resource
      * @param array $params
      * @param $orderNumber
      *
-     * @return void
      * @throws \Shopware\Components\Api\Exception\NotFoundException| ApiException\CustomValidationException
      */
     public function prepareOrderDetails(array $params, $orderNumber)
@@ -165,10 +164,10 @@ class Btorder extends Resource
                 ->innerJoin('Shopware\Models\Attribute\Article', 'attributes', Join::WITH, 'attributes.articleId = details.articleId')
                 ->where('details.number = :orderNumber')
                 ->andWhere('attributes.blisstributeVhsNumber = :vhsArticleNumber')
-                ->setParameters(array(
+                ->setParameters([
                     'orderNumber' => $orderNumber,
                     'vhsArticleNumber' => $detail['blisstributeVhsNumber'],
-                ))
+                ])
                 ->getQuery()
                 ->getOneOrNullResult();
 
@@ -178,16 +177,16 @@ class Btorder extends Resource
                     ->createQueryBuilder('details')
                     ->where('details.number = :orderNumber')
                     ->andWhere('details.articleNumber = :articleNumber')
-                    ->setParameters(array(
+                    ->setParameters([
                         'orderNumber' => $orderNumber,
-                        'articleNumber' => $articleNumber
-                    ))
+                        'articleNumber' => $articleNumber,
+                    ])
                     ->getQuery()
                     ->getOneOrNullResult();
 
                 if ($detailModel == null) {
                     throw new ApiException\NotFoundException(
-                        "Detail by orderId " . $orderNumber . " and articleNumber " . $articleNumber . " not found"
+                        'Detail by orderId ' . $orderNumber . ' and articleNumber ' . $articleNumber . ' not found'
                     );
                 }
             }

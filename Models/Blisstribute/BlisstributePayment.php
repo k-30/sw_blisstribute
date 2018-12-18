@@ -3,15 +3,15 @@
 namespace Shopware\CustomModels\Blisstribute;
 
 use Doctrine\ORM\Mapping as ORM;
-use Shopware\Models\Payment\Payment;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Payment\Payment;
 
 /**
  * blisstribute shipment mapping entity
  *
  * @author    Julian Engler
- * @package   BlisstributePayment
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="Shopware\CustomModels\Blisstribute\BlisstributePaymentRepository")
@@ -68,6 +68,7 @@ class BlisstributePayment extends ModelEntity
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -91,6 +92,7 @@ class BlisstributePayment extends ModelEntity
     public function setPayment($payment)
     {
         $this->payment = $payment;
+
         return $this;
     }
 
@@ -114,6 +116,7 @@ class BlisstributePayment extends ModelEntity
     public function setClassName($className)
     {
         $this->className = $className;
+
         return $this;
     }
 
@@ -130,20 +133,21 @@ class BlisstributePayment extends ModelEntity
     /**
      * set if order will be transferred as payed
      *
-     * @param boolean $isPayed
+     * @param bool $isPayed
      *
      * @return BlisstributePayment
      */
     public function setIsPayed($isPayed)
     {
         $this->isPayed = $isPayed;
+
         return $this;
     }
 
     /**
      * return if order will be transferred as payed
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsPayed()
     {

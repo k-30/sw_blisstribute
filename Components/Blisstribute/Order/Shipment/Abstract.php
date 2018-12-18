@@ -4,8 +4,8 @@
  * base class for blisstribute shipment mapping
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Blisstribute\Order\Shipment\Abstract
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 abstract class Shopware_Components_Blisstribute_Order_Shipment_Abstract

@@ -2,18 +2,16 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Doctrine\ORM\Mapping AS ORM;
-
-use Shopware\Models\Shop\Shop;
-use Shopware\Models\Dispatch\Dispatch;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Shop\Shop;
 
 /**
  * blisstribute shipment mapping entity
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="Shopware\CustomModels\Blisstribute\BlisstributeShopRepository")
@@ -71,6 +69,7 @@ class BlisstributeShop extends ModelEntity
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -82,6 +81,7 @@ class BlisstributeShop extends ModelEntity
     public function setShop($shop)
     {
         $this->shop = $shop;
+
         return $this;
     }
 
@@ -109,6 +109,7 @@ class BlisstributeShop extends ModelEntity
     public function setAdvertisingMediumCode($advertisingMediumCode)
     {
         $this->advertisingMediumCode = $advertisingMediumCode;
+
         return $this;
     }
 }

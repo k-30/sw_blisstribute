@@ -2,21 +2,18 @@
 
 use Shopware\Components\CSRFWhitelistAware;
 
-
 /**
  * cron to sync order to blisstribute
  *
  * @author    Julian Engler
- * @package   Shopware\Controllers\Backend
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 class Shopware_Controllers_Backend_BlisstributeOrderSyncCron extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
     /**
      * init cron controller
-     *
-     * @return void
      */
     public function init()
     {
@@ -27,14 +24,13 @@ class Shopware_Controllers_Backend_BlisstributeOrderSyncCron extends Enlight_Con
     public function getWhitelistedCSRFActions()
     {
         return [
-            'index'
+            'index',
         ];
     }
 
     /**
      * cron action
      *
-     * @return void
      *
      * @throws Exception
      * @throws Zend_Controller_Response_Exception
@@ -45,7 +41,7 @@ class Shopware_Controllers_Backend_BlisstributeOrderSyncCron extends Enlight_Con
             $this->Response()
                  ->clearHeaders()
                  ->setHttpResponseCode(403)
-                 ->appendBody("Forbidden");
+                 ->appendBody('Forbidden');
 
             return;
         }
@@ -62,6 +58,7 @@ class Shopware_Controllers_Backend_BlisstributeOrderSyncCron extends Enlight_Con
             $controller->processBatchOrderSync();
         } catch (Exception $ex) {
             echo date('r') . ' - Failed BLISSTRIBUTE order sync cron' . PHP_EOL;
+
             return;
         }
 

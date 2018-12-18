@@ -2,16 +2,16 @@
 
 namespace Shopware\CustomModels\Blisstribute;
 
-use Doctrine\ORM\Mapping AS ORM;
-use Shopware\Models\Dispatch\Dispatch;
+use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Dispatch\Dispatch;
 
 /**
  * blisstribute shipment mapping entity
  *
  * @author    Julian Engler
- * @package   Shopware\CustomModels\Blisstribute
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  *
  * @ORM\Entity(repositoryClass="Shopware\CustomModels\Blisstribute\BlisstributeShipmentRepository")
@@ -99,6 +99,7 @@ class BlisstributeShipment extends ModelEntity
     public function setShipment(Dispatch $shipment)
     {
         $this->shipment = $shipment;
+
         return $this;
     }
 
@@ -122,6 +123,7 @@ class BlisstributeShipment extends ModelEntity
     public function setClassName($className)
     {
         $this->className = $className;
+
         return $this;
     }
 
@@ -134,5 +136,4 @@ class BlisstributeShipment extends ModelEntity
     {
         return $this->className;
     }
-
 }

@@ -31,8 +31,7 @@ class Shopware_Components_Blisstribute_Command_OrderExport extends ShopwareComma
             ->setHelp(<<<EOF
 The <info>%command.name%</info> exports a single order to blisstribute.
 EOF
-            )
-        ;
+            );
     }
 
     /**
@@ -41,7 +40,7 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $orderNumber = $input->getArgument('orderNumber');
-        $force = (bool)$input->getArgument('force');
+        $force = (bool) $input->getArgument('force');
 
         $output->writeln('<info>blisstribute order export started for order number ' . $orderNumber . '</info>');
 
@@ -49,9 +48,10 @@ EOF
         $orderRepository = $modelManager->getRepository('Shopware\Models\Order\Order');
 
         /** @var \Shopware\Models\Order\Order $order */
-        $order = $orderRepository->findOneBy(array('number' => $orderNumber));
+        $order = $orderRepository->findOneBy(['number' => $orderNumber]);
         if ($order === null) {
             $output->writeln('<error>buuuhuuhuuu.. could not load order. script terminated.</error>');
+
             return null;
         }
 
@@ -60,6 +60,7 @@ EOF
         $blisstributeOrder = $blisstributeOrderRepository->findByOrder($order);
         if ($blisstributeOrder == null) {
             $output->writeln('<error>buuuhuuhuuu.. could not load blisstribute order. script terminated.</error>');
+
             return;
         }
 
@@ -68,6 +69,6 @@ EOF
         );
         $result = $orderSync->processSingleOrderSync($blisstributeOrder, $force);
 
-        $output->writeln('<info>export result: ' . (int)$result . '</info>');
+        $output->writeln('<info>export result: ' . (int) $result . '</info>');
     }
 }

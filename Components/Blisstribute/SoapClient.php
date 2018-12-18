@@ -7,8 +7,8 @@ require_once __DIR__ . '/Exception/TransferException.php';
  * abstract soap client class for blisstribute sync
  *
  * @author    Julian Engler
- * @package   Shopware\Components\Blisstribute\SoapClient
  * @copyright Copyright (c) 2016
+ *
  * @since     1.0.0
  */
 abstract class Shopware_Components_Blisstribute_SoapClient
@@ -31,12 +31,12 @@ abstract class Shopware_Components_Blisstribute_SoapClient
      * @var string
      */
     protected $blisstributeClient = null;
-    
+
     /**
      * @var string
      */
     protected $blisstributeHttpUser = null;
-    
+
     /**
      * @var string
      */
@@ -56,7 +56,7 @@ abstract class Shopware_Components_Blisstribute_SoapClient
      * @var \Enlight_Config
      */
     protected $config;
-    
+
     /**
      * @var object
      */
@@ -74,7 +74,7 @@ abstract class Shopware_Components_Blisstribute_SoapClient
     public function __construct(\Enlight_Config $config)
     {
         $this->config = $config;
-       
+
         if ($config->get('blisstribute-http-login') && $config->get('blisstribute-http-password')) {
             $this->blisstributeHttpUser = $config->get('blisstribute-http-login');
             $this->blisstributeHttpPassword = $config->get('blisstribute-http-password');
@@ -86,11 +86,30 @@ abstract class Shopware_Components_Blisstribute_SoapClient
     }
 
     /**
+     * get nusoap call
+     *
+     * @param string $name
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        $soapClient = $this->getSoapClient();
+        $soapClient->timeout = 60;
+        $soapClient->response_timeout = 120;
+
+        $this->_lastMethod = $name;
+
+        return $soapClient->{$name}($arguments);
+    }
+
+    /**
      * init nusoap
      *
-     * @return nusoap_client
-     *
      * @throws Shopware_Components_Blisstribute_Exception_TransferException
+     *
+     * @return nusoap_client
      */
     public function getSoapClient()
     {
@@ -120,11 +139,11 @@ abstract class Shopware_Components_Blisstribute_SoapClient
      * send request to blisstribute
      *
      * @param string $method
-     * @param array $params
-     *
-     * @return mixed
+     * @param array  $params
      *
      * @throws Shopware_Components_Blisstribute_Exception_TransferException
+     *
+     * @return mixed
      */
     public function sendActionRequest($method, array $params)
     {
@@ -134,8 +153,7 @@ abstract class Shopware_Components_Blisstribute_SoapClient
             );
         }
 
-        $result = $this->__call($method, $params);
-        return $result;
+        return $this->__call($method, $params);
     }
 
     /**
@@ -146,13 +164,11 @@ abstract class Shopware_Components_Blisstribute_SoapClient
     public function sendAuthenticationRequest()
     {
         /** @noinspection PhpUndefinedMethodInspection */
-        $result = $this->getSoapClient()->authenticate(
+        return $this->getSoapClient()->authenticate(
             $this->blisstributeClient,
             $this->blisstributeUser,
             $this->blisstributePassword
         );
-
-        return $result;
     }
 
     /**
@@ -169,28 +185,9 @@ abstract class Shopware_Components_Blisstribute_SoapClient
             . '/' . $this->blisstributeService;
 
         if ($wsdlEndpoint) {
-            $url .=  '/?wsdl';
+            $url .= '/?wsdl';
         }
 
         return $url;
-    }
-
-    /**
-     * get nusoap call
-     *
-     * @param string $name
-     * @param array $arguments
-     *
-     * @return mixed
-     */
-    public function __call($name, $arguments)
-    {
-        $soapClient = $this->getSoapClient();
-        $soapClient->timeout = 60;
-        $soapClient->response_timeout = 120;
-
-        $this->_lastMethod = $name;
-
-        return $soapClient->{$name}($arguments);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Shopware\ExitBBlisstribute\Subscribers;
 
-use \Enlight\Event\SubscriberInterface;
-use \Shopware\Components\DependencyInjection\Container;
+use Enlight\Event\SubscriberInterface;
+use Shopware\Components\DependencyInjection\Container;
 
 require_once __DIR__ . '/../Components/Blisstribute/Domain/LoggerTrait.php';
 require_once __DIR__ . '/../Components/Blisstribute/Order/Sync.php';
@@ -26,7 +26,7 @@ class ModelSubscriber implements SubscriberInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -62,14 +62,12 @@ class ModelSubscriber implements SubscriberInterface
             'Shopware\CustomModels\Blisstribute\BlisstributeArticleType::preUpdate' => 'preUpdateBlisstributeArticleType',
 
             // other events
-            'Shopware_Modules_Order_SendMail_BeforeSend' => 'onOrderSendMailBeforeSend'
+            'Shopware_Modules_Order_SendMail_BeforeSend' => 'onOrderSendMailBeforeSend',
         ];
     }
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemoveOrder(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -93,8 +91,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postPersistArticle(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -105,6 +101,7 @@ class ModelSubscriber implements SubscriberInterface
         $article = $eventArgs->get('entity');
         if ($article == null || !($article instanceof \Shopware\Models\Article\Article)) {
             \Shopware()->PluginLogger()->log(\Monolog\Logger::DEBUG, 'modelSubscriber::postPersistArticle done - no article');
+
             return;
         }
 
@@ -123,8 +120,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postUpdateArticle(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -135,6 +130,7 @@ class ModelSubscriber implements SubscriberInterface
         $article = $eventArgs->get('entity');
         if ($article == null || !($article instanceof \Shopware\Models\Article\Article)) {
             \Shopware()->PluginLogger()->log(\Monolog\Logger::DEBUG, 'modelSubscriber::postUpdateArticle done - no article');
+
             return;
         }
 
@@ -147,6 +143,7 @@ class ModelSubscriber implements SubscriberInterface
 
         if ($blisstributeArticle->isTriggerSync()) {
             \Shopware()->PluginLogger()->log(\Monolog\Logger::DEBUG, 'modelSubscriber::postUpdateArticle done - trigger sync already set');
+
             return;
         }
 
@@ -163,8 +160,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemoveArticle(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -188,8 +183,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postPersistDetail(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -224,8 +217,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postUpdateDetail(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -236,6 +227,7 @@ class ModelSubscriber implements SubscriberInterface
         $detail = $eventArgs->get('entity');
         if ($detail == null || !($detail instanceof \Shopware\Models\Article\Detail)) {
             \Shopware()->PluginLogger()->log(\Monolog\Logger::DEBUG, 'modelSubscriber::postUpdateDetail done - no detail');
+
             return;
         }
 
@@ -251,6 +243,7 @@ class ModelSubscriber implements SubscriberInterface
 
         if ($blisstributeArticle->isTriggerSync()) {
             \Shopware()->PluginLogger()->log(\Monolog\Logger::DEBUG, 'modelSubscriber::postUpdateDetail done - trigger sync already set');
+
             return;
         }
 
@@ -267,8 +260,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemoveDetail(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -300,8 +291,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postPersistProperty(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -319,8 +308,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemoveProperty(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -340,8 +327,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postPersistShop(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -359,8 +344,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemoveShop(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -381,8 +364,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postPersistVoucher(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -400,8 +381,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemoveVoucher(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -422,8 +401,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postPersistPayment(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -441,8 +418,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemovePayment(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -463,8 +438,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function postPersistDispatch(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -482,8 +455,6 @@ class ModelSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preRemoveDispatch(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -506,8 +477,6 @@ class ModelSubscriber implements SubscriberInterface
      * blisstribute order event fired before db insert
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function prePersistBlisstributeOrder(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -523,8 +492,6 @@ class ModelSubscriber implements SubscriberInterface
      * blisstribute event fired before db update
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preUpdateBlisstributeOrder(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -536,8 +503,6 @@ class ModelSubscriber implements SubscriberInterface
      * blisstribute order event fired before db insert
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function prePersistBlisstributeShippingRequest(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -553,8 +518,6 @@ class ModelSubscriber implements SubscriberInterface
      * blisstribute event fired before db update
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preUpdateBlisstributeShippingRequest(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -567,8 +530,6 @@ class ModelSubscriber implements SubscriberInterface
      * blisstribute order event fired before db insert
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function prePersistBlisstributeShippingRequestItem(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -584,8 +545,6 @@ class ModelSubscriber implements SubscriberInterface
      * blisstribute event fired before db update
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preUpdateBlisstributeShippingRequestItem(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -598,8 +557,6 @@ class ModelSubscriber implements SubscriberInterface
      * article type event fired before db update
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preUpdateBlisstributeArticle(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -614,8 +571,6 @@ class ModelSubscriber implements SubscriberInterface
      * article type event fired before create entity
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function prePersistBlisstributeArticleType(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -631,8 +586,6 @@ class ModelSubscriber implements SubscriberInterface
      * article type event fired before update
      *
      * @param \Enlight_Event_EventArgs $eventArgs
-     *
-     * @return void
      */
     public function preUpdateBlisstributeArticleType(\Enlight_Event_EventArgs $eventArgs)
     {
@@ -665,6 +618,7 @@ class ModelSubscriber implements SubscriberInterface
         $order = $orderRepository->findOneBy(['number' => $orderProxy->sOrderNumber]);
         if ($order === null) {
             $this->logDebug('order not found');
+
             return null;
         }
 
@@ -688,9 +642,9 @@ class ModelSubscriber implements SubscriberInterface
             $modelManager->flush();
         }
 
-        if($pluginConfig->get('blisstribute-auto-sync-order'))
-        {
+        if ($pluginConfig->get('blisstribute-auto-sync-order')) {
             $this->transferOrder($blisstributeOrder);
+
             return true;
         }
 
@@ -710,12 +664,14 @@ class ModelSubscriber implements SubscriberInterface
 
         if ($blisstributeOrder === null || !$blisstributeOrder) {
             $this->logInfo('blisstributeOrder is null! onOrderFinished failed!');
+
             return false;
         }
 
         $order = $blisstributeOrder->getOrder();
         if ($order === null || !$order) {
             $this->logInfo('order is null! onOrderFinished failed!');
+
             return false;
         }
 
