@@ -760,7 +760,7 @@ class Shopware_Plugins_Backend_ExitBBlisstribute_Bootstrap extends Shopware_Comp
         $pluginConfig = new Enlight_Config($config);
 
         $this->logDebug('onRunBlisstributeArticleSyncCron::repair trigger sync flag started');
-        $sql = "UPDATE s_plugin_blisstribute_articles a INNER JOIN s_articles b ON a.s_article_id = b.id SET trigger_sync = 1 WHERE a.modified_at < b.changetime AND trigger_sync = 0";
+        $sql = "UPDATE s_plugin_blisstribute_articles a INNER JOIN s_articles b ON a.s_article_id = b.id SET a.trigger_sync = 1 WHERE a.last_cron_at < b.changetime AND trigger_sync = 0";
         $this->get('db')->query($sql);
         $this->logDebug('onRunBlisstributeArticleSyncCron::repair trigger sync flag done');
 
